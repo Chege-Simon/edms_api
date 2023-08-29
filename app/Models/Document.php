@@ -9,6 +9,7 @@ use App\Models\DocField;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Document extends Model
 {
@@ -32,8 +33,16 @@ class Document extends Model
     /**
      * Get the doc_fields for the folder.
      */
-    public function doc_fields(): HasMany
+    // public function doc_fields(): HasMany
+    // {
+    //     return $this->hasMany(DocField::class);
+    // }
+
+    /**
+     * Get the fields for the document.
+     */
+    public function fields(): BelongsToMany
     {
-        return $this->hasMany(DocField::class);
+        return $this->belongsToMany(Field::class, 'doc_fields');
     }
 }

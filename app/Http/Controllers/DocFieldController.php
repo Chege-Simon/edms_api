@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\DocField;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 use App\Http\Resources\FieldDocResource;
 
@@ -15,17 +15,9 @@ class DocFieldController extends Controller
      */
     public function index()
     {
-        $DocFields = DocField::with('document')->get();
+        $docFields = DocField::all();
 
-        return $this->sendResponse(FieldDocResource::collection($DocFields), 'DocFields retrieved successfully.');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return $this->sendResponse(FieldDocResource::collection($docFields), 'DocFields retrieved successfully.');
     }
 
     /**
@@ -34,20 +26,20 @@ class DocFieldController extends Controller
     public function store(Request $request)
     {
         $input = $request->all();
-   
+
         $validator = Validator::make($input, [
             'document_id' => 'required',
             'field_id' => 'required',
             'value' => 'required|max:255'
         ]);
-   
-        if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors());
         }
-   
-        $DocField = DocField::create($input);
-   
-        return $this->sendResponse(new FieldDocResource($DocField), 'DocField created successfully.');
+
+        $docField = DocField::create($input);
+
+        return $this->sendResponse(new FieldDocResource($docField), 'DocField created successfully.');
     }
 
     /**
@@ -55,52 +47,43 @@ class DocFieldController extends Controller
      */
     public function show(string $id)
     {
-        $DocField = DocField::find($id);
-  
-        if (is_null($DocField)) {
+        $docField = DocField::find($id);
+
+        if (is_null($docField)) {
             return $this->sendError('DocField not found.');
         }
-   
-        return $this->sendResponse($DocField, 'DocField retrieved successfully.');
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        return $this->sendResponse($docField, 'DocField retrieved successfully.');
     }
-
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
         $input = $request->all();
-   
+
         $validator = Validator::make($input, [
             'document_id' => 'required',
             'field_id' => 'required',
             'value' => 'required|max:255'
         ]);
-   
-        if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors());
         }
-   
-        $DocField = DocField::find($id);
-  
-        if (is_null($DocField)) {
+
+        $docField = DocField::find($id);
+
+        if (is_null($docField)) {
             return $this->sendError('DocField not found.');
         }
 
-        $DocField->document_id = $input['document_id'];
-        $DocField->field_id = $input['field_id'];
-        $DocField->value = $input['value'];
-        $DocField->save();
-   
-        return $this->sendResponse(new FieldDocResource($DocField), 'DocField updated successfully.');
+        $docField->document_id = $input['document_id'];
+        $docField->field_id = $input['field_id'];
+        $docField->value = $input['value'];
+        $docField->save();
+
+        return $this->sendResponse(new FieldDocResource($docField), 'DocField updated successfully.');
     }
 
     /**
@@ -109,7 +92,7 @@ class DocFieldController extends Controller
     public function destroy(string $id)
     {
         DocField::find($id)->delete();
-   
+
         return $this->sendResponse([], 'DocField deleted successfully.');
     }
 }

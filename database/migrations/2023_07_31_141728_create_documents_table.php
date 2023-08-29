@@ -13,13 +13,15 @@ return new class extends Migration
     {
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
-            $table->integer('folder_id');
+            $table->unsignedBigInteger('folder_id');
             $table->string('physical_path');
             $table->string('document_name');
             $table->string('file_size');
-            $table->integer('created_by');
-            $table->integer('updated_by');
+            $table->unsignedBigInteger('created_by');
+            $table->unsignedBigInteger('updated_by');
             $table->timestamps();
+
+            $table->foreign('folder_id')->references('id')->on('folders')->onDelete('cascade');
         });
     }
 

@@ -36,4 +36,12 @@ class Folder extends Model
     {
         return $this->hasMany(Document::class);
     }
+    
+    /**
+     * Get the permissions for the Folder.
+     */
+    public function permissions(): HasMany
+    {
+        return $this->hasMany(GroupPermission::class);
+    }
 }

@@ -13,10 +13,13 @@ return new class extends Migration
     {
         Schema::create('doc_fields', function (Blueprint $table) {
             $table->id();
-            $table->integer('document_id');
-            $table->integer('field_id');
+            $table->unsignedBigInteger('document_id');
+            $table->unsignedBigInteger('field_id');
             $table->string('value');
             $table->timestamps();
+
+            $table->foreign('document_id')->references('id')->on('documents')->onDelete('cascade');
+            $table->foreign('field_id')->references('id')->on('fields')->onDelete('cascade');
         });
     }
 

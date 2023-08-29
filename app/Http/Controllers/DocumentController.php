@@ -4,26 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Document;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
 class DocumentController extends Controller
 {
-    
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $Documents = Document::with('doc_fields')->get();
+        $documents = Document::with('fields')->with('folder')->get();
 
-        // $Documents = DB::table('documents')
-        // ->leftJoin('fields', 'fields.folder_id', '=', 'fields.folder_id')
-        // ->leftJoin('doc_fields', 'documents.id', '=', 'doc_fields.document_id', 'and',  'documents.folders.field_id', '=', 'doc_fields.field_id')
-        // ->select('documents.*', 'doc_fields.*','fields.*')
-        // ->get();
-    
-        return $this->sendResponse($Documents, 'Documents retrieved successfully.');
+        return $this->sendResponse($documents, 'Documents retrieved successfully.');
     }
 
     /**
@@ -40,7 +34,7 @@ class DocumentController extends Controller
     public function store(Request $request)
     {
         $input = $request->all();
-   
+
         $validator = Validator::make($input, [
             'folder_id' => 'required',
             'physical_path' => 'required|max:255',
@@ -49,14 +43,14 @@ class DocumentController extends Controller
             'created_by' => 'required',
             'updated_by' => 'required'
         ]);
-   
-        if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors());
         }
-   
-        $Document = Document::create($input);
-   
-        return $this->sendResponse($Document, 'Document created successfully.');
+
+        $document = Document::create($input);
+
+        return $this->sendResponse($document, 'Document created successfully.');
     }
 
     /**
@@ -64,13 +58,13 @@ class DocumentController extends Controller
      */
     public function show(string $id)
     {
-        $Document = Document::find($id);
-  
-        if (is_null($Document)) {
+        $document = Document::with('fields')->with('folder')->find($id);
+
+        if (is_null($document)) {
             return $this->sendError('Document not found.');
         }
-   
-        return $this->sendResponse($Document, 'Document retrieved successfully.');
+
+        return $this->sendResponse($document, 'Document retrieved successfully.');
     }
 
     /**
@@ -87,7 +81,7 @@ class DocumentController extends Controller
     public function update(Request $request, string $id)
     {
         $input = $request->all();
-   
+
         $validator = Validator::make($input, [
             'folder_id' => 'required',
             'physical_path' => 'required|max:255',
@@ -95,25 +89,25 @@ class DocumentController extends Controller
             'file_size' => 'required|max:255',
             'updated_by' => 'required',
         ]);
-   
-        if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors());
         }
-   
-        $Document = Document::find($id);
-        
-        if (is_null($Document)) {
+
+        $document = Document::find($id);
+
+        if (is_null($document)) {
             return $this->sendError('Document not found.');
         }
-        $Document->folder_id = $input['folder_id'];
-        $Document->physical_path = $input['physical_path'];
-        $Document->document_name = $input['document_name'];
-        $Document->file_size = $input['file_size'];
-        // $Document->created_by = $input['created_by'];
-        $Document->updated_by = $input['updated_by'];
-        $Document->save();
-   
-        return $this->sendResponse($Document, 'Document updated successfully.');
+        $document->folder_id = $input['folder_id'];
+        $document->physical_path = $input['physical_path'];
+        $document->document_name = $input['document_name'];
+        $document->file_size = $input['file_size'];
+        // $document->created_by = $input['created_by'];
+        $document->updated_by = $input['updated_by'];
+        $document->save();
+
+        return $this->sendResponse($document, 'Document updated successfully.');
     }
 
     /**
@@ -122,7 +116,7 @@ class DocumentController extends Controller
     public function destroy(string $id)
     {
         Document::find($id)->delete();
-   
+
         return $this->sendResponse([], 'Document deleted successfully.');
     }
 }

@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('fields', function (Blueprint $table) {
             $table->id();
-            $table->integer('folder_id');
+            $table->unsignedBigInteger('folder_id');
             $table->string('field_name');
             $table->string('field_datatype');
             $table->timestamps();
+
+            $table->foreign('folder_id')->references('id')->on('folders')->onDelete('cascade');
         });
     }
 

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Field;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class FieldController extends Controller
 {
@@ -13,9 +13,9 @@ class FieldController extends Controller
      */
     public function index()
     {
-        $Fields = Field::with('folder')->get();
-    
-        return $this->sendResponse($Fields, 'Fields retrieved successfully.');
+        $fields = Field::with('folder')->get();
+
+        return $this->sendResponse($fields, 'Fields retrieved successfully.');
     }
 
     /**
@@ -32,20 +32,20 @@ class FieldController extends Controller
     public function store(Request $request)
     {
         $input = $request->all();
-   
+
         $validator = Validator::make($input, [
             'folder_id' => 'required',
             'field_name' => 'required|max:255',
             'field_datatype' => 'required|max:255'
         ]);
-   
-        if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors());
         }
-   
-        $Field = Field::create($input);
-   
-        return $this->sendResponse($Field, 'Field created successfully.');
+
+        $field = Field::create($input);
+
+        return $this->sendResponse($field, 'Field created successfully.');
     }
 
     /**
@@ -53,13 +53,13 @@ class FieldController extends Controller
      */
     public function show(string $id)
     {
-        $Field = Field::find($id);
-  
-        if (is_null($Field)) {
+        $field = Field::find($id);
+
+        if (is_null($field)) {
             return $this->sendError('Field not found.');
         }
-   
-        return $this->sendResponse($Field, 'Field retrieved successfully.');
+
+        return $this->sendResponse($field, 'Field retrieved successfully.');
     }
 
     /**
@@ -76,30 +76,30 @@ class FieldController extends Controller
     public function update(Request $request, string $id)
     {
         $input = $request->all();
-   
+
         $validator = Validator::make($input, [
             'folder_id' => 'required',
             'field_name' => 'required|max:255',
             'field_datatype' => 'required|max:255'
         ]);
-   
-        if($validator->fails()){
-            return $this->sendError('Validation Error.', $validator->errors());       
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error.', $validator->errors());
         }
-   
-        $Field = Field::find($id);
-        
-        
-        if (is_null($Field)) {
+
+        $field = Field::find($id);
+
+
+        if (is_null($field)) {
             return $this->sendError('Folder not found.');
         }
 
-        $Field->folder_id = $input['folder_id'];
-        $Field->field_name = $input['field_name'];
-        $Field->field_datatype = $input['field_datatype'];
-        $Field->save();
-   
-        return $this->sendResponse($Field, 'Field updated successfully.');
+        $field->folder_id = $input['folder_id'];
+        $field->field_name = $input['field_name'];
+        $field->field_datatype = $input['field_datatype'];
+        $field->save();
+
+        return $this->sendResponse($field, 'Field updated successfully.');
     }
 
     /**
@@ -108,7 +108,7 @@ class FieldController extends Controller
     public function destroy(string $id)
     {
         Field::find($id)->delete();
-   
+
         return $this->sendResponse([], 'Field deleted successfully.');
     }
 }
