@@ -22,10 +22,10 @@ class DocField extends Model
     /**
      * Get the document that owns docfield.
      */
-    // public function document(): BelongsTo
-    // {
-    //     return $this->belongsTo(Document::class);
-    // }
+    public function document(): BelongsTo
+    {
+        return $this->belongsTo(Document::class);
+    }
     /**
      * Get the field that owns docfield.
      */

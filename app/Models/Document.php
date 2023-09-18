@@ -33,10 +33,10 @@ class Document extends Model
     /**
      * Get the doc_fields for the folder.
      */
-    // public function doc_fields(): HasMany
-    // {
-    //     return $this->hasMany(DocField::class);
-    // }
+    public function doc_fields(): HasMany
+    {
+        return $this->hasMany(DocField::class);
+    }
 
     /**
      * Get the fields for the document.

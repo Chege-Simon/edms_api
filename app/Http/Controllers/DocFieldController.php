@@ -15,9 +15,10 @@ class DocFieldController extends Controller
      */
     public function index()
     {
-        $docFields = DocField::all();
+        $docFields = DocField::paginate(20);
 
-        return $this->sendResponse(FieldDocResource::collection($docFields), 'DocFields retrieved successfully.');
+        return $this->sendResponse(FieldDocResource::collection($docFields)
+        ->response()->getData(true), 'DocFields retrieved successfully.');
     }
 
     /**

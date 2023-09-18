@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\GroupResource;
 use App\Models\Group;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -13,9 +14,10 @@ class GroupController extends Controller
      */
     public function index()
     {
-        $groups = Group::with('permissions')->with('users')->get();
+        $groups = Group::with('permissions')->with('users')->paginate(20);
 
-        return $this->sendResponse($groups, 'Groups retrieved successfully.');
+        return $this->sendResponse(GroupResource::collection($groups)
+        ->response()->getData(true),'Groups retrieved successfully.');
     }
 
     /**
@@ -36,7 +38,8 @@ class GroupController extends Controller
 
         $group = Group::create($input);
 
-        return $this->sendResponse($group, 'Group created successfully.');
+        return $this->sendResponse(GroupResource::collection($group)
+        ->response()->getData(true),'Group created successfully.');
     }
 
     /**
@@ -50,7 +53,8 @@ class GroupController extends Controller
             return $this->sendError('Group not found.');
         }
 
-        return $this->sendResponse($group, 'Group retrieved successfully.');
+        return $this->sendResponse(GroupResource::collection($group)
+        ->response()->getData(true),'Group retrieved successfully.');
     }
 
     /**
@@ -78,7 +82,8 @@ class GroupController extends Controller
         $group->group_admin_id = $input['group_admin_id'];
         $group->save();
 
-        return $this->sendResponse($group, 'Group updated successfully.');
+        return $this->sendResponse(GroupResource::collection($group)
+        ->response()->getData(true),'Group updated successfully.');
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DocumentResource;
 use Illuminate\Http\Request;
 use App\Models\Document;
 use Illuminate\Support\Facades\Validator;
@@ -15,9 +16,10 @@ class DocumentController extends Controller
      */
     public function index()
     {
-        $documents = Document::with('fields')->with('folder')->get();
+        $documents = Document::with('fields')->with('folder')->with('doc_fields')->paginate(20);
 
-        return $this->sendResponse($documents, 'Documents retrieved successfully.');
+        return $this->sendResponse(DocumentResource::collection($documents)
+        ->response()->getData(true), 'Documents retrieved successfully.');
     }
 
     /**
@@ -50,7 +52,8 @@ class DocumentController extends Controller
 
         $document = Document::create($input);
 
-        return $this->sendResponse($document, 'Document created successfully.');
+        return $this->sendResponse(DocumentResource::collection($document)
+        ->response()->getData(true), 'Document created successfully.');
     }
 
     /**
@@ -58,13 +61,14 @@ class DocumentController extends Controller
      */
     public function show(string $id)
     {
-        $document = Document::with('fields')->with('folder')->find($id);
+        $document = Document::with('fields')->with('folder')->with('doc_fields')->find($id);
 
         if (is_null($document)) {
             return $this->sendError('Document not found.');
         }
 
-        return $this->sendResponse($document, 'Document retrieved successfully.');
+        return $this->sendResponse(DocumentResource::collection($document)
+        ->response()->getData(true), 'Document retrieved successfully.');
     }
 
     /**
@@ -103,11 +107,11 @@ class DocumentController extends Controller
         $document->physical_path = $input['physical_path'];
         $document->document_name = $input['document_name'];
         $document->file_size = $input['file_size'];
-        // $document->created_by = $input['created_by'];
         $document->updated_by = $input['updated_by'];
         $document->save();
 
-        return $this->sendResponse($document, 'Document updated successfully.');
+        return $this->sendResponse(DocumentResource::collection($document)
+        ->response()->getData(true), 'Document updated successfully.');
     }
 
     /**

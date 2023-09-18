@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\FieldResource;
 use Illuminate\Http\Request;
 use App\Models\Field;
 use Illuminate\Support\Facades\Validator;
@@ -13,9 +14,10 @@ class FieldController extends Controller
      */
     public function index()
     {
-        $fields = Field::with('folder')->get();
+        $fields = Field::with('folder')->paginate(20);
 
-        return $this->sendResponse($fields, 'Fields retrieved successfully.');
+        return $this->sendResponse(FieldResource::collection($fields)
+        ->response()->getData(true), 'Fields retrieved successfully.');
     }
 
     /**
@@ -45,7 +47,8 @@ class FieldController extends Controller
 
         $field = Field::create($input);
 
-        return $this->sendResponse($field, 'Field created successfully.');
+        return $this->sendResponse(FieldResource::collection($field)
+        ->response()->getData(true), 'Field created successfully.');
     }
 
     /**
@@ -59,7 +62,8 @@ class FieldController extends Controller
             return $this->sendError('Field not found.');
         }
 
-        return $this->sendResponse($field, 'Field retrieved successfully.');
+        return $this->sendResponse(FieldResource::collection($field)
+        ->response()->getData(true), 'Field retrieved successfully.');
     }
 
     /**
@@ -99,7 +103,8 @@ class FieldController extends Controller
         $field->field_datatype = $input['field_datatype'];
         $field->save();
 
-        return $this->sendResponse($field, 'Field updated successfully.');
+        return $this->sendResponse(FieldResource::collection($field)
+        ->response()->getData(true), 'Field updated successfully.');
     }
 
     /**

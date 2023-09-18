@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -13,9 +14,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::with('groups')->with('groups.permissions')->get();
+        $users = User::with('groups')->with('groups.permissions')->paginate(20);
 
-        return $this->sendResponse($users, 'Users retrieved successfully.');
+        return $this->sendResponse(UserResource::collection($users)
+        ->response()->getData(true),'Users retrieved successfully.');
     }
 
     /**
@@ -35,7 +37,8 @@ class UserController extends Controller
 
         $user = User::create($input);
 
-        return $this->sendResponse($user, 'User created successfully.');
+        return $this->sendResponse(UserResource::collection($user)
+        ->response()->getData(true),'User created successfully.');
     }
 
     /**
@@ -49,7 +52,8 @@ class UserController extends Controller
             return $this->sendError('User not found.');
         }
 
-        return $this->sendResponse($user, 'User retrieved successfully.');
+        return $this->sendResponse(UserResource::collection($user)
+        ->response()->getData(true),'User retrieved successfully.');
     }
 
     /**
@@ -75,7 +79,8 @@ class UserController extends Controller
         $user->external_user_id = $input['external_user_id'];
         $user->save();
 
-        return $this->sendResponse($user, 'User updated successfully.');
+        return $this->sendResponse(UserResource::collection($user)
+        ->response()->getData(true),'User updated successfully.');
     }
 
     /**

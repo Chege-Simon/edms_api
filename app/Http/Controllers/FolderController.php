@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\FolderResource;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Folder;
@@ -14,10 +15,11 @@ class FolderController extends Controller
      */
     public function index()
     {
-        $Folders = Folder::with('documents')->with('documents.fields')->get();
+        $folders = Folder::with('documents')->with('documents.fields')->paginate(20);
 
 
-        return $this->sendResponse($Folders, 'Folders retrieved successfully.');
+        return $this->sendResponse(FolderResource::collection($folders)
+        ->response()->getData(true), 'Folders retrieved successfully.');
     }
 
     /**
@@ -44,9 +46,10 @@ class FolderController extends Controller
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
-        $Folder = Folder::create($input);
+        $folder = Folder::create($input);
 
-        return $this->sendResponse($Folder, 'Folder created successfully.');
+        return $this->sendResponse(FolderResource::collection($folder)
+        ->response()->getData(true), 'Folder created successfully.');
     }
 
     /**
@@ -54,13 +57,14 @@ class FolderController extends Controller
      */
     public function show(string $id)
     {
-        $Folder = Folder::with('documents')->with('documents.fields')->find($id);
+        $folder = Folder::with('documents')->with('documents.fields')->find($id);
 
-        if (is_null($Folder)) {
+        if (is_null($folder)) {
             return $this->sendError('Folder not found.');
         }
 
-        return $this->sendResponse($Folder, 'Folder retrieved successfully.');
+        return $this->sendResponse(FolderResource::collection($folder)
+        ->response()->getData(true), 'Folder retrieved successfully.');
     }
 
     /**
@@ -86,17 +90,18 @@ class FolderController extends Controller
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());
         }
-        $Folder = Folder::find($id);
+        $folder = Folder::find($id);
 
-        if (is_null($Folder)) {
+        if (is_null($folder)) {
             return $this->sendError('Folder not found.');
         }
 
-        $Folder->name = $input['name'];
-        $Folder->path = $input['path'];
-        $Folder->save();
+        $folder->name = $input['name'];
+        $folder->path = $input['path'];
+        $folder->save();
 
-        return $this->sendResponse($Folder, 'Folder updated successfully.');
+        return $this->sendResponse(FolderResource::collection($folder)
+        ->response()->getData(true),'Folder updated successfully.');
     }
 
     /**

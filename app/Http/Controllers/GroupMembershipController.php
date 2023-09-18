@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\GroupMembershipResource;
 use App\Models\GroupMembership;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -13,9 +14,10 @@ class GroupMembershipController extends Controller
      */
     public function index()
     {
-        $groupmemberships = GroupMembership::all();
+        $groupmemberships = GroupMembership::paginate(20);
 
-        return $this->sendResponse($groupmemberships, 'Group Memberships retrieved successfully.');
+        return $this->sendResponse(GroupMembershipResource::collection($groupmemberships)
+        ->response()->getData(true),'Group Memberships retrieved successfully.');
     }
 
     /**
@@ -36,7 +38,8 @@ class GroupMembershipController extends Controller
 
         $groupmembership = GroupMembership::create($input);
 
-        return $this->sendResponse($groupmembership, 'Group Membership assigned successfully.');
+        return $this->sendResponse(GroupMembershipResource::collection($groupmembership)
+        ->response()->getData(true),'Group Membership assigned successfully.');
     }
 
     /**
@@ -50,7 +53,8 @@ class GroupMembershipController extends Controller
             return $this->sendError('Group Membership not found.');
         }
 
-        return $this->sendResponse($groupmembership, 'Group Membership retrieved successfully.');
+        return $this->sendResponse(GroupMembershipResource::collection($groupmembership)
+        ->response()->getData(true),'Group Membership retrieved successfully.');
     }
 
     /**
@@ -78,7 +82,8 @@ class GroupMembershipController extends Controller
         $groupmembership->user_id = $input['user_id'];
         $groupmembership->save();
 
-        return $this->sendResponse($groupmembership, 'Group Membership updated successfully.');
+        return $this->sendResponse(GroupMembershipResource::collection($groupmembership)
+        ->response()->getData(true),'Group Membership updated successfully.');
     }
 
     /**

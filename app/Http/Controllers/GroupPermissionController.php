@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\GroupPermissionResource;
 use App\Models\GroupPermission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -13,9 +14,10 @@ class GroupPermissionController extends Controller
      */
     public function index()
     {
-        $groupPermissions = GroupPermission::all();
+        $groupPermissions = GroupPermission::paginate(20);
 
-        return $this->sendResponse($groupPermissions, 'Group Memberships retrieved successfully.');
+        return $this->sendResponse(GroupPermissionResource::collection($groupPermissions)
+        ->response()->getData(true),'Group Memberships retrieved successfully.');
     }
 
     /**
@@ -36,7 +38,8 @@ class GroupPermissionController extends Controller
 
         $groupPermission = GroupPermission::create($input);
 
-        return $this->sendResponse($groupPermission, 'Group Permission assigned successfully.');
+        return $this->sendResponse(GroupPermissionResource::collection($groupPermission)
+        ->response()->getData(true),'Group Permission assigned successfully.');
     }
 
     /**
@@ -50,7 +53,8 @@ class GroupPermissionController extends Controller
             return $this->sendError('Group Membership not found.');
         }
 
-        return $this->sendResponse($groupPermission, 'Group Permission retrieved successfully.');
+        return $this->sendResponse(GroupPermissionResource::collection($groupPermission)
+        ->response()->getData(true),'Group Permission retrieved successfully.');
     }
 
     /**
@@ -75,7 +79,8 @@ class GroupPermissionController extends Controller
         $groupPermission->fill($request->all());
         $groupPermission->save();
 
-        return $this->sendResponse($groupPermission, 'Group Membership updated successfully.');
+        return $this->sendResponse(GroupPermissionResource::collection($groupPermission)
+        ->response()->getData(true),'Group Membership updated successfully.');
     }
 
     /**
