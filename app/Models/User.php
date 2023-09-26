@@ -40,6 +40,11 @@ class User extends Authenticatable implements LdapAuthenticatable,JWTSubject
         return $this->belongsToMany(Group::class, 'group_memberships');
     }
 
+    public function workstep_results(): HasMany
+    {
+        return $this->hasMany(WorkStepResult::class);
+    }
+
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *

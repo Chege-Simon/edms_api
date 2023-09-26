@@ -45,4 +45,12 @@ class Document extends Model
     {
         return $this->belongsToMany(Field::class, 'doc_fields');
     }
+
+    /**
+     * Get the workstep_results for the document.
+     */
+    public function workstep_results(): HasMany
+    {
+        return $this->hasMany(WorkStepResult::class);
+    }
 }
