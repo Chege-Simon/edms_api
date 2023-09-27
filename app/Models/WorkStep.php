@@ -23,14 +23,14 @@ class WorkStep extends Model
         // 'workstep_id',
         'previous',
         'folder_id',
-        'action',
+        'activity',
         'workstep_type'
     ];
 
      /**
-     * Get the folders that owns workstep.
+     * Get the folder that owns workstep.
      */
-    public function folders(): BelongsTo
+    public function folder(): BelongsTo
     {
         return $this->belongsTo(Folder::class);
     }

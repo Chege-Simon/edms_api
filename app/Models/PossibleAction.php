@@ -20,7 +20,7 @@ class PossibleAction extends Model
      */
     protected $fillable = [
         'workstep_id',
-        'next',
+        'next_workstep_id',
         'name',
      ];
 
@@ -29,16 +29,8 @@ class PossibleAction extends Model
      */
     public function workstep(): BelongsTo
     {
-        return $this->belongsTo(WorkStep::class);
+        return $this->belongsTo(WorkStep::class, 'next_workstep_id');
     }
-
-    //  /**
-    //  * Get the folder that owns action.
-    //  */
-    // public function folder(): BelongsTo
-    // {
-    //     return $this->belongsTo(Folder::class);
-    // }
 
       /**
      * Get the workstep that owns action.

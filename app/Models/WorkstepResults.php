@@ -19,7 +19,7 @@ class WorkStepResult extends Model
 
     protected $fillable = [
         'workstep_id',
-        'doc_id',
+        'document_id',
         'action_id',
         'user_id',
         'value',
@@ -27,7 +27,7 @@ class WorkStepResult extends Model
             /**
      * Get the user for the workstep result.
      */
-    public function users(): BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
@@ -48,7 +48,7 @@ class WorkStepResult extends Model
               /**
      * Get the workstep for the workstep result.
      */
-    public function worksteps():BelongsTo
+    public function workstep():BelongsTo
     {
         return $this->belongsTo(WorkStep::class);
     }

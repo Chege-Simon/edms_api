@@ -15,9 +15,7 @@ class FolderController extends Controller
      */
     public function index()
     {
-        $folders = Folder::with('documents')->with('documents.fields')->paginate(20);
-
-
+        $folders = Folder::with(['documents', 'documents.fields', 'worksteps'])->paginate(20);
         return $this->sendResponse(FolderResource::collection($folders)
         ->response()->getData(true), 'Folders retrieved successfully.');
     }
@@ -58,7 +56,6 @@ class FolderController extends Controller
     public function show(string $id)
     {
         $folder = Folder::with('documents')->with('documents.fields')->find($id);
-        // $folder = Folder::with(['documents', 'documents.fields', 'worksteps'])->paginate(20);
         if (is_null($folder)) {
             return $this->sendError('Folder not found.');
         }

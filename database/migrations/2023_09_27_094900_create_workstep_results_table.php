@@ -21,10 +21,10 @@ return new class extends Migration
             $table->unsignedBigInteger('value');
             $table->timestamps();
 
-            $table->foreign('workstep_id')->references('id')->on('work_steps')->onDelete('cascade');
-            $table->foreign('action_id')->references('id')->on('possible_actions')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('document_id')->references('id')->on('documents')->onDelete('cascade');
+            $table->foreign('workstep_id')->references('id')->on('work_steps');
+            $table->foreign('action_id')->references('id')->on('possible_actions');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('document_id')->references('id')->on('documents');
         });
     }
 

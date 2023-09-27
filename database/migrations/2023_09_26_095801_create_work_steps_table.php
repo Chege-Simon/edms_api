@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('workstep_type');
             $table->unsignedBigInteger('previous');
             $table->unsignedBigInteger('folder_id');
-            $table->string('action');
+            $table->string('activity');
             $table->timestamps();
 
             $table->foreign('folder_id')->references('id')->on('folders')->onDelete('cascade');

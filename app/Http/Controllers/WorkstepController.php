@@ -16,7 +16,7 @@ class WorkstepController extends Controller
      */
     public function index()
     {
-        $workstep = Workstep::paginate(20);
+        $workstep = Workstep::with('possible_actions')->with('folder')->paginate(20);
 
         return $this->sendResponse(WorkstepResource::collection($workstep)
         ->response()->getData(true), 'Workstep retrieved successfully.');
@@ -53,7 +53,7 @@ class WorkstepController extends Controller
      */
     public function show(string $id)
     {
-        $workstep= Workstep::with('possible_actions')->with('folders')->find($id);
+        $workstep= Workstep::with('possible_actions')->with('folder')->find($id);
 
         if (is_null($workstep)) {
             return $this->sendError('Workstep not found.');

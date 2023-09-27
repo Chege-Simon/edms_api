@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('workstep_id');
             $table->string('name');
-            $table->unsignedBigInteger('next');
+            $table->unsignedBigInteger('next_workstep_id');
             $table->timestamps();
 
             $table->foreign('workstep_id')->references('id')->on('work_steps')->onDelete('cascade');
