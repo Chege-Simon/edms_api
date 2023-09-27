@@ -78,7 +78,7 @@ return [
                 'password_column' => false,
                 'sync_attributes' => [
                     'name' => 'cn',
-                    'email' => 'mail',
+                    // 'email' => 'mail',
                     'username' => 'sAMAccountName',
                 ],
             ],

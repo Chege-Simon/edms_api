@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('next');
             $table->timestamps();
 
-            $table->foreign('workstep_id')->references('id')->on('workstep')->onDelete('cascade');
+            $table->foreign('workstep_id')->references('id')->on('work_steps')->onDelete('cascade');
 
         });
     }

@@ -17,7 +17,7 @@ return new class extends Migration
             // $table->string('guid');
             // $table->string('password');
             $table->string('name');
-            $table->string('email')->nullable();
+            // $table->string('email')->nullable();
             $table->timestamps();
         });
     }

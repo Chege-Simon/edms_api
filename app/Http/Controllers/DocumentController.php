@@ -42,8 +42,8 @@ class DocumentController extends Controller
             'physical_path' => 'required|max:255',
             'document_name' => 'required|max:255',
             'file_size' => 'required|max:255',
-            'created_by' => 'required',
-            'updated_by' => 'required'
+            'created_by' => 'nullable',
+            'updated_by' => 'nullable'
         ]);
 
         if ($validator->fails()) {

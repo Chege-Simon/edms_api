@@ -20,18 +20,19 @@ class WorkStep extends Model
      * @var array
      */
     protected $fillable = [
-        'workstep_id',
+        // 'workstep_id',
         'previous',
         'folder_id',
-        'action'
+        'action',
+        'workstep_type'
     ];
 
      /**
-     * Get the folders in the workstep.
+     * Get the folders that owns workstep.
      */
-    public function folders(): HasMany
+    public function folders(): BelongsTo
     {
-        return $this->hasMany(Folder::class);
+        return $this->belongsTo(Folder::class);
     }
     
     public function worksteps_results():HasOne
@@ -39,4 +40,14 @@ class WorkStep extends Model
         return $this->hasOne(WorkStepResult::class);
     }
 
+    public function possibleActions(): HasMany
+    {
+        return $this->hasMany(PossibleAction::class);
+    }
+
 }
+
+
+
+
+

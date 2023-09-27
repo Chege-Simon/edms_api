@@ -58,7 +58,7 @@ class FolderController extends Controller
     public function show(string $id)
     {
         $folder = Folder::with('documents')->with('documents.fields')->find($id);
-
+        // $folder = Folder::with(['documents', 'documents.fields', 'worksteps'])->paginate(20);
         if (is_null($folder)) {
             return $this->sendError('Folder not found.');
         }

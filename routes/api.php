@@ -4,6 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\FieldController;
+use App\Http\Controllers\WorkstepController;
+use App\Http\Controllers\PossibleActionController;
+use App\Http\Controllers\WorkstepResultController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocFieldController;
@@ -11,6 +14,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupMembershipController;
 use App\Http\Controllers\GroupPermissionController;
+use App\Models\WorkStep;
 
 /*
 |--------------------------------------------------------------------------
@@ -104,4 +108,28 @@ Route::group([
     Route::post('grouppermissions', [GroupPermissionController::class, 'store'])->name('grouppermissions.store');
     Route::post('grouppermissions/{id}', [GroupPermissionController::class, 'update'])->name('grouppermissions.update');
     Route::get('grouppermissions/{id}/delete', [GroupPermissionController::class, 'destroy'])->name('grouppermissions.destroy');
+
+
+     // workstep endpoints
+     Route::get('workstep', [WorkStepController::class, 'index'])->name('workstep');
+     Route::get('workstep/{id}', [WorkStepController::class, 'show'])->name('workstep.show');
+     Route::post('workstep', [WorkStepController::class, 'store'])->name('workstep.store');
+     Route::post('workstep/{id}', [WorkStepController::class, 'update'])->name('workstep.update');
+     Route::get('workstep/{id}/delete', [WorkStepController::class, 'destroy'])->name('workstep.destroy');
+
+     
+      // possible action endpoints
+      Route::get('possibleaction', [PossibleActionController::class, 'index'])->name('possibleaction');
+      Route::get('possibleaction/{id}', [PossibleActionController::class, 'show'])->name('possibleaction.show');
+      Route::post('possibleaction', [PossibleActionController::class, 'store'])->name('possibleaction.store');
+      Route::post('possibleaction/{id}', [PossibleActionController::class, 'update'])->name('possibleaction.update');
+      Route::get('possibleaction/{id}/delete', [PossibleActionController::class, 'destroy'])->name('possibleaction.destroy');
+ 
+
+    //   // workstep result endpoints
+    //  Route::get('workstep', [WorkStepController::class, 'index'])->name('workstep');
+    //  Route::get('workstep/{id}', [WorkStepController::class, 'show'])->name('workstep.show');
+    //  Route::post('workstep', [WorkStepController::class, 'store'])->name('workstep.store');
+    //  Route::post('workstep/{id}', [WorkStepController::class, 'update'])->name('workstep.update');
+    //  Route::get('workstep/{id}/delete', [WorkStepController::class, 'destroy'])->name('workstep.destroy');
 });  
