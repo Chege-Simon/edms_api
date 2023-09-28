@@ -52,7 +52,7 @@ class WorkstepResultController extends Controller
      */
     public function show(string $id)
     {
-        $workstepresult = WorkStepResult::with('user')->with('workstep')->with('possible_action')->with('document')->paginate(20);
+        $workstepresult = WorkStepResult::with('user')->with('workstep')->with('possible_action')->with('document')->find($id);
 
         if (is_null($workstepresult)) {
             return $this->sendError('Workstep Result not found.');
@@ -85,7 +85,7 @@ class WorkstepResultController extends Controller
         $workstepresult = WorkStepResult::find($id);
 
         if (is_null($workstepresult)) {
-            return $this->sendError('Workstep not found.');
+            return $this->sendError('Workstep Result not found.');
         }
 
         $workstepresult->user_id = $input['user_id'];
