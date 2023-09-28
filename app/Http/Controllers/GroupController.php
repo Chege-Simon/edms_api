@@ -37,10 +37,7 @@ class GroupController extends Controller
         }
 
         $group = Group::create($input);
-
-        // return $this->sendResponse(GroupResource::collection($group)
-        // ->response()->getData(true),'Group created successfully.');
-
+ 
         return $this->sendResponse(GroupResource::make($group)
         ->response()->getData(true),'Group created successfully.');
         
@@ -57,7 +54,7 @@ class GroupController extends Controller
             return $this->sendError('Group not found.');
         }
 
-        return $this->sendResponse(GroupResource::collection($group)
+        return $this->sendResponse(GroupResource::make($group)
         ->response()->getData(true),'Group retrieved successfully.');
     }
 
@@ -86,7 +83,7 @@ class GroupController extends Controller
         $group->group_admin_id = $input['group_admin_id'];
         $group->save();
 
-        return $this->sendResponse(GroupResource::collection($group)
+        return $this->sendResponse(GroupResource::make($group)
         ->response()->getData(true),'Group updated successfully.');
     }
 

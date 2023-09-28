@@ -52,7 +52,7 @@ class DocumentController extends Controller
 
         $document = Document::create($input);
 
-        return $this->sendResponse(DocumentResource::collection($document)
+        return $this->sendResponse(DocumentResource::make($document)
         ->response()->getData(true), 'Document created successfully.');
     }
 
@@ -67,7 +67,7 @@ class DocumentController extends Controller
             return $this->sendError('Document not found.');
         }
 
-        return $this->sendResponse(DocumentResource::collection($document)
+        return $this->sendResponse(DocumentResource::make($document)
         ->response()->getData(true), 'Document retrieved successfully.');
     }
 
@@ -110,7 +110,7 @@ class DocumentController extends Controller
         $document->updated_by = $input['updated_by'];
         $document->save();
 
-        return $this->sendResponse(DocumentResource::collection($document)
+        return $this->sendResponse(DocumentResource::make($document)
         ->response()->getData(true), 'Document updated successfully.');
     }
 

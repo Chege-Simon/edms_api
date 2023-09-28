@@ -38,7 +38,7 @@ class GroupPermissionController extends Controller
 
         $groupPermission = GroupPermission::create($input);
 
-        return $this->sendResponse(GroupPermissionResource::collection($groupPermission)
+        return $this->sendResponse(GroupPermissionResource::make($groupPermission)
         ->response()->getData(true),'Group Permission assigned successfully.');
     }
 
@@ -53,7 +53,7 @@ class GroupPermissionController extends Controller
             return $this->sendError('Group Membership not found.');
         }
 
-        return $this->sendResponse(GroupPermissionResource::collection($groupPermission)
+        return $this->sendResponse(GroupPermissionResource::make($groupPermission)
         ->response()->getData(true),'Group Permission retrieved successfully.');
     }
 
@@ -79,7 +79,7 @@ class GroupPermissionController extends Controller
         $groupPermission->fill($request->all());
         $groupPermission->save();
 
-        return $this->sendResponse(GroupPermissionResource::collection($groupPermission)
+        return $this->sendResponse(GroupPermissionResource::make($groupPermission)
         ->response()->getData(true),'Group Membership updated successfully.');
     }
 

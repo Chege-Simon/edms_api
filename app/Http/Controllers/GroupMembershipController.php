@@ -38,7 +38,7 @@ class GroupMembershipController extends Controller
 
         $groupmembership = GroupMembership::create($input);
 
-        return $this->sendResponse(GroupMembershipResource::collection($groupmembership)
+        return $this->sendResponse(GroupMembershipResource::make($groupmembership)
         ->response()->getData(true),'Group Membership assigned successfully.');
     }
 
@@ -53,7 +53,7 @@ class GroupMembershipController extends Controller
             return $this->sendError('Group Membership not found.');
         }
 
-        return $this->sendResponse(GroupMembershipResource::collection($groupmembership)
+        return $this->sendResponse(GroupMembershipResource::make($groupmembership)
         ->response()->getData(true),'Group Membership retrieved successfully.');
     }
 
@@ -82,7 +82,7 @@ class GroupMembershipController extends Controller
         $groupmembership->user_id = $input['user_id'];
         $groupmembership->save();
 
-        return $this->sendResponse(GroupMembershipResource::collection($groupmembership)
+        return $this->sendResponse(GroupMembershipResource::make($groupmembership)
         ->response()->getData(true),'Group Membership updated successfully.');
     }
 

@@ -47,7 +47,7 @@ class FieldController extends Controller
 
         $field = Field::create($input);
 
-        return $this->sendResponse(FieldResource::collection($field)
+        return $this->sendResponse(FieldResource::make($field)
         ->response()->getData(true), 'Field created successfully.');
     }
 
@@ -62,7 +62,7 @@ class FieldController extends Controller
             return $this->sendError('Field not found.');
         }
 
-        return $this->sendResponse(FieldResource::collection($field)
+        return $this->sendResponse(FieldResource::make($field)
         ->response()->getData(true), 'Field retrieved successfully.');
     }
 
@@ -103,7 +103,7 @@ class FieldController extends Controller
         $field->field_datatype = $input['field_datatype'];
         $field->save();
 
-        return $this->sendResponse(FieldResource::collection($field)
+        return $this->sendResponse(FieldResource::make($field)
         ->response()->getData(true), 'Field updated successfully.');
     }
 

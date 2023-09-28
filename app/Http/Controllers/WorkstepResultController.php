@@ -44,7 +44,7 @@ class WorkstepResultController extends Controller
 
         $workstepresult = WorkStepResult::create($input);
 
-        return $this->sendResponse(WorkstepResultResource::collection($workstepresult)
+        return $this->sendResponse(WorkstepResultResource::make($workstepresult)
             ->response()->getData(true), 'Workstep Result created successfully.');
     }
 
@@ -59,7 +59,7 @@ class WorkstepResultController extends Controller
             return $this->sendError('Workstep Result not found.');
         }
 
-        return $this->sendResponse(WorkstepResultResource::collection($workstepresult)
+        return $this->sendResponse(WorkstepResultResource::make($workstepresult)
             ->response()->getData(true), 'Workstep Result retrieved successfully.');
     }
 
@@ -97,7 +97,7 @@ class WorkstepResultController extends Controller
 
         $workstepresult->save();
 
-        return $this->sendResponse(WorkstepResultResource::collection($workstepresult)
+        return $this->sendResponse(WorkstepResultResource::make($workstepresult)
             ->response()->getData(true), 'Workstep Result updated successfully.');
     }
 

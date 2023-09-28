@@ -46,7 +46,7 @@ class FolderController extends Controller
 
         $folder = Folder::create($input);
 
-        return $this->sendResponse(FolderResource::collection($folder)
+        return $this->sendResponse(FolderResource::make($folder)
         ->response()->getData(true), 'Folder created successfully.');
     }
 
@@ -60,7 +60,7 @@ class FolderController extends Controller
             return $this->sendError('Folder not found.');
         }
 
-        return $this->sendResponse(FolderResource::collection($folder)
+        return $this->sendResponse(FolderResource::make($folder)
         ->response()->getData(true), 'Folder retrieved successfully.');
     }
 
@@ -97,7 +97,7 @@ class FolderController extends Controller
         $folder->path = $input['path'];
         $folder->save();
 
-        return $this->sendResponse(FolderResource::collection($folder)
+        return $this->sendResponse(FolderResource::make($folder)
         ->response()->getData(true),'Folder updated successfully.');
     }
 

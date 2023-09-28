@@ -41,7 +41,7 @@ class PossibleActionController extends Controller
 
         $possibleAction = PossibleAction::create($input);
 
-        return $this->sendResponse(PossibleActionResource::collection($possibleAction)
+        return $this->sendResponse(PossibleActionResource::make($possibleAction)
             ->response()->getData(true), 'Possible Action created successfully.');
     }
 
@@ -56,7 +56,7 @@ class PossibleActionController extends Controller
             return $this->sendError('Possible Action not found.');
         }
 
-        return $this->sendResponse(PossibleActionResource::collection($possibleAction)
+        return $this->sendResponse(PossibleActionResource::make($possibleAction)
             ->response()->getData(true), 'Possible Action retrieved successfully.');
     }
 
@@ -88,7 +88,7 @@ class PossibleActionController extends Controller
 
         $possibleAction->save();
 
-        return $this->sendResponse(PossibleActionResource::collection($possibleAction)
+        return $this->sendResponse(PossibleActionResource::make($possibleAction)
             ->response()->getData(true), 'Possible Action updated successfully.');
     }
 

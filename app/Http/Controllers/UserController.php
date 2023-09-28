@@ -37,7 +37,7 @@ class UserController extends Controller
 
         $user = User::create($input);
 
-        return $this->sendResponse(UserResource::collection($user)
+        return $this->sendResponse(UserResource::make($user)
         ->response()->getData(true),'User created successfully.');
     }
 
@@ -52,7 +52,7 @@ class UserController extends Controller
             return $this->sendError('User not found.');
         }
 
-        return $this->sendResponse(UserResource::collection($user)
+        return $this->sendResponse(UserResource::make($user)
         ->response()->getData(true),'User retrieved successfully.');
     }
 
@@ -79,7 +79,7 @@ class UserController extends Controller
         $user->external_user_id = $input['external_user_id'];
         $user->save();
 
-        return $this->sendResponse(UserResource::collection($user)
+        return $this->sendResponse(UserResource::make($user)
         ->response()->getData(true),'User updated successfully.');
     }
 
