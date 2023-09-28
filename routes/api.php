@@ -126,10 +126,10 @@ Route::group([
       Route::get('possibleaction/{id}/delete', [PossibleActionController::class, 'destroy'])->name('possibleaction.destroy');
  
 
-    //   // workstep result endpoints
-    //  Route::get('workstep', [WorkStepController::class, 'index'])->name('workstep');
-    //  Route::get('workstep/{id}', [WorkStepController::class, 'show'])->name('workstep.show');
-    //  Route::post('workstep', [WorkStepController::class, 'store'])->name('workstep.store');
-    //  Route::post('workstep/{id}', [WorkStepController::class, 'update'])->name('workstep.update');
-    //  Route::get('workstep/{id}/delete', [WorkStepController::class, 'destroy'])->name('workstep.destroy');
+      // workstep result endpoints
+     Route::get('workstepresult', [WorkstepResultController::class, 'index'])->name('workstepresult');
+     Route::get('workstepresult/{id}', [WorkstepResultController::class, 'show'])->name('workstepresult.show');
+     Route::post('workstepresult', [WorkstepResultController::class, 'store'])->name('workstepresult.store');
+     Route::post('workstepresult/{id}', [WorkstepResultController::class, 'update'])->name('workstepresult.update');
+     Route::get('workstepresult/{id}/delete', [WorkstepResultController::class, 'destroy'])->name('workstepresult.destroy');
 });  
