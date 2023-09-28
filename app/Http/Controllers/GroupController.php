@@ -38,8 +38,12 @@ class GroupController extends Controller
 
         $group = Group::create($input);
 
-        return $this->sendResponse(GroupResource::collection($group)
+        // return $this->sendResponse(GroupResource::collection($group)
+        // ->response()->getData(true),'Group created successfully.');
+
+        return $this->sendResponse(GroupResource::make($group)
         ->response()->getData(true),'Group created successfully.');
+        
     }
 
     /**

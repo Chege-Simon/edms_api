@@ -9,18 +9,19 @@ use App\Http\Resources\WorkstepResultResource;
 
 class WorkstepResultController extends Controller
 {
-/**
+    /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $workstepresult = WorkStepResult::with('user')->with('workstep')->with('possible_action')->with('document')->paginate(20);
+        $this->CheckPermission("view worksteps");
+        $workstepresults = WorkStepResult::with('user')->with('workstep')->with('possible_action')->with('document')->paginate(20);
 
-        return $this->sendResponse(WorkstepResultResource::collection($workstepresult)
-        ->response()->getData(true), 'Workstep Result retrieved successfully.');
+        return $this->sendResponse(WorkstepResultResource::collection($workstepresults)
+            ->response()->getData(true), 'Workstep Result retrieved successfully.');
     }
 
-     /**
+    /**
      * Store a newly created resource in storage.
      */
 
@@ -34,7 +35,7 @@ class WorkstepResultController extends Controller
             'document_id' => 'required',
             'action_id' => 'required',
             'value' => 'required',
- 
+
         ]);
 
         if ($validator->fails()) {
@@ -44,10 +45,10 @@ class WorkstepResultController extends Controller
         $workstepresult = WorkStepResult::create($input);
 
         return $this->sendResponse(WorkstepResultResource::collection($workstepresult)
-        ->response()->getData(true), 'Workstep Result created successfully.');
+            ->response()->getData(true), 'Workstep Result created successfully.');
     }
 
-        /**
+    /**
      * Display the specified resource.
      */
     public function show(string $id)
@@ -59,7 +60,7 @@ class WorkstepResultController extends Controller
         }
 
         return $this->sendResponse(WorkstepResultResource::collection($workstepresult)
-        ->response()->getData(true), 'Workstep Result retrieved successfully.');
+            ->response()->getData(true), 'Workstep Result retrieved successfully.');
     }
 
     /**
@@ -75,7 +76,7 @@ class WorkstepResultController extends Controller
             'document_id' => 'required',
             'action_id' => 'required',
             'value' => 'required',
- 
+
         ]);
 
 
@@ -97,7 +98,7 @@ class WorkstepResultController extends Controller
         $workstepresult->save();
 
         return $this->sendResponse(WorkstepResultResource::collection($workstepresult)
-        ->response()->getData(true),'Workstep Result updated successfully.');
+            ->response()->getData(true), 'Workstep Result updated successfully.');
     }
 
     /**
@@ -108,4 +109,5 @@ class WorkstepResultController extends Controller
         WorkStepResult::find($id)->delete();
 
         return $this->sendResponse([], 'Workstep Result deleted successfully.');
-    }}
+    }
+}

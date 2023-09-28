@@ -51,19 +51,14 @@ class Handler extends ExceptionHandler
             } else {
                 return new JsonResponse(['Error' => 'Could not decode token: Please provide a valid token'], 401);
             }
-        }
-            elseif($e instanceof TokenInvalidException) {
-                return new JsonResponse(['Error' => 'Could not decode token: Please provide a valid token'], 401);
-            }
-        else if ($e instanceof TokenExpiredException) {
+        } elseif ($e instanceof TokenInvalidException) {
+            return new JsonResponse(['Error' => 'Could not decode token: Please provide a valid token'], 401);
+        } elseif ($e instanceof TokenExpiredException) {
             return response()->json(['error' => 'Token is expired'], 401);
-        }
-        else if ($e instanceof JWTException) {
+        } elseif ($e instanceof JWTException) {
             return response()->json(['error' => 'There is a problem with your token'], 401);
         }
 
         return parent::render($request, $e);
-    
     }
-    
 }
