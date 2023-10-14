@@ -20,9 +20,24 @@ class Folder extends Model
     * @var array
     */
     protected $fillable = [
-        'name', 'path'
+        'name', 'path', 'parent_folder_id'
     ];
     
+    /**
+     * Get the parent_folder for the folder.
+     */
+    public function parent(): belongsTo
+    {
+        return $this->belongsTo(Field::class, 'parent_folder_id');
+    }
+
+    /**
+     * Get the children folders for the folder.
+     */
+    public function children(): HasMany
+    {
+        return $this->hasMany(Folder::class, 'parent_folder_id');
+    }
     /**
      * Get the fields for the folder.
      */

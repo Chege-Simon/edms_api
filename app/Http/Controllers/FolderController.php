@@ -13,11 +13,15 @@ class FolderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(string $parent_folder_id)
     {
-        $folders = Folder::with(['documents', 'documents.fields', 'worksteps'])->paginate(20);
+        if (!$this->CheckPermission("view_folders", $parent_folder_id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
+        $folders = Folder::with(['documents', 'documents.fields', 'workstep'])
+            ->where('parent_folder_id', '=', $parent_folder_id)->whereNotIn('id', [1])->paginate(20);
         return $this->sendResponse(FolderResource::collection($folders)
-        ->response()->getData(true), 'Folders retrieved successfully.');
+            ->response()->getData(true), 'Folders retrieved successfully.');
     }
 
     /**
@@ -34,10 +38,19 @@ class FolderController extends Controller
     public function store(Request $request)
     {
         $input = $request->all();
+        $parent_folder = Folder::find($input['parent_folder_id']);
+        if (is_null($parent_folder)) {
+            return $this->sendError('Parent folder does not exist');
+        }
 
+        if (!$this->CheckPermission("create_folder", $parent_folder->id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
+        $input['path'] = $parent_folder->path . "/" . $input['name'];
         $validator = Validator::make($input, [
             'name' => 'required|max:255',
-            'path' => 'required|max:255'
+            'path' => 'required',
+            'parent_folder_id' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
@@ -47,7 +60,7 @@ class FolderController extends Controller
         $folder = Folder::create($input);
 
         return $this->sendResponse(FolderResource::make($folder)
-        ->response()->getData(true), 'Folder created successfully.');
+            ->response()->getData(true), 'Folder created successfully.');
     }
 
     /**
@@ -55,13 +68,17 @@ class FolderController extends Controller
      */
     public function show(string $id)
     {
+
+        if (!$this->CheckPermission("open_folder", $id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
         $folder = Folder::with('documents')->with('documents.fields')->find($id);
         if (is_null($folder)) {
             return $this->sendError('Folder not found.');
         }
 
         return $this->sendResponse(FolderResource::make($folder)
-        ->response()->getData(true), 'Folder retrieved successfully.');
+            ->response()->getData(true), 'Folder retrieved successfully.');
     }
 
     /**
@@ -78,10 +95,19 @@ class FolderController extends Controller
     public function update(Request $request, string $id)
     {
         $input = $request->all();
+        $parent_folder = Folder::find($input['parent_folder_id']);
+        if (is_null($parent_folder)) {
+            return $this->sendError('Parent folder does not exist');
+        }
 
+        if (!$this->CheckPermission("update_folder", $parent_folder->id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
+        $input['path'] = $parent_folder->path . "/" .  $input['name'];
         $validator = Validator::make($input, [
             'name' => 'required|max:255',
-            'path' => 'required|max:255'
+            'path' => 'required',
+            'parent_folder_id' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
@@ -98,7 +124,7 @@ class FolderController extends Controller
         $folder->save();
 
         return $this->sendResponse(FolderResource::make($folder)
-        ->response()->getData(true),'Folder updated successfully.');
+            ->response()->getData(true), 'Folder updated successfully.');
     }
 
     /**
@@ -106,7 +132,16 @@ class FolderController extends Controller
      */
     public function destroy(string $id)
     {
-        Folder::find($id)->delete();
+        $folder = Folder::find($id);
+
+        if (is_null($folder)) {
+            return $this->sendError('Parent folder does not exist');
+        }
+
+        if (!$this->CheckPermission("delete_folder", $folder->id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
+        $folder->delete();
 
         return $this->sendResponse([], 'Folder deleted successfully.');
     }

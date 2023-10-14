@@ -14,7 +14,6 @@ class WorkstepResultController extends Controller
      */
     public function index()
     {
-        $this->CheckPermission("view worksteps");
         $workstepresults = WorkStepResult::with('user')->with('workstep')->with('possible_action')->with('document')->paginate(20);
 
         return $this->sendResponse(WorkstepResultResource::collection($workstepresults)

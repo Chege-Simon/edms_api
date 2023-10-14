@@ -14,7 +14,7 @@ class GroupPermissionController extends Controller
      */
     public function index()
     {
-        $groupPermissions = GroupPermission::paginate(20);
+        $groupPermissions = GroupPermission::with('group')->with('group.users')->paginate(20);
 
         return $this->sendResponse(GroupPermissionResource::collection($groupPermissions)
         ->response()->getData(true),'Group Memberships retrieved successfully.');
@@ -47,10 +47,10 @@ class GroupPermissionController extends Controller
      */
     public function show(string $id)
     {
-        $groupPermission = GroupPermission::with('permissions')->with('users')->find($id);
+        $groupPermission = GroupPermission::with('group')->with('group.users')->find($id);
 
         if (is_null($groupPermission)) {
-            return $this->sendError('Group Membership not found.');
+            return $this->sendError('Group Permission not found.');
         }
 
         return $this->sendResponse(GroupPermissionResource::make($groupPermission)
@@ -74,13 +74,13 @@ class GroupPermissionController extends Controller
         $groupPermission = GroupPermission::find($id);
 
         if (is_null($groupPermission)) {
-            return $this->sendError('Group Membership not found.');
+            return $this->sendError('Group Permission not found.');
         }
         $groupPermission->fill($request->all());
         $groupPermission->save();
 
         return $this->sendResponse(GroupPermissionResource::make($groupPermission)
-        ->response()->getData(true),'Group Membership updated successfully.');
+        ->response()->getData(true),'Group Permission updated successfully.');
     }
 
     /**

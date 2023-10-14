@@ -2,23 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\DocField;
-use Illuminate\Support\Facades\Validator;
+use App\Models\Document;
+use Illuminate\Http\Request;
 
 use App\Http\Resources\FieldDocResource;
+use Illuminate\Support\Facades\Validator;
 
 class DocFieldController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(string $document_id)
     {
-        $docFields = DocField::paginate(20);
+        $document = Document::find($document_id);
+
+        if (is_null($document)) {
+            return $this->sendError('Document does not exist');
+        }
+
+        if (!$this->CheckPermission("view_docfields", $document->folder_id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
+
+        $docFields = DocField::where('document_id', '=', $document->id)->paginate(20);
 
         return $this->sendResponse(FieldDocResource::collection($docFields)
-        ->response()->getData(true), 'DocFields retrieved successfully.');
+            ->response()->getData(true), 'DocFields retrieved successfully.');
     }
 
     /**
@@ -28,6 +39,14 @@ class DocFieldController extends Controller
     {
         $input = $request->all();
 
+        $document = Document::find($input['document_id']);
+        if (is_null($document)) {
+            return $this->sendError('Document does not exist');
+        }
+
+        if (!$this->CheckPermission("create_docfield", $document->folder_id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
         $validator = Validator::make($input, [
             'document_id' => 'required',
             'field_id' => 'required',
@@ -53,7 +72,15 @@ class DocFieldController extends Controller
         if (is_null($docField)) {
             return $this->sendError('DocField not found.');
         }
+        $document = Document::find($docField->document_id);
 
+        if (is_null($document)) {
+            return $this->sendError('Document does not exist');
+        }
+
+        if (!$this->CheckPermission("view_docfield", $document->folder_id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
         return $this->sendResponse($docField, 'DocField retrieved successfully.');
     }
     /**
@@ -62,6 +89,20 @@ class DocFieldController extends Controller
     public function update(Request $request, string $id)
     {
         $input = $request->all();
+
+        $docField = DocField::find($id);
+
+        if (is_null($docField)) {
+            return $this->sendError('DocField not found.');
+        }
+        $document = Document::find($docField->document_id);
+        if (is_null($document)) {
+            return $this->sendError('Document does not exist');
+        }
+
+        if (!$this->CheckPermission("update_docfield", $document->folder_id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
 
         $validator = Validator::make($input, [
             'document_id' => 'required',
@@ -73,11 +114,6 @@ class DocFieldController extends Controller
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
-        $docField = DocField::find($id);
-
-        if (is_null($docField)) {
-            return $this->sendError('DocField not found.');
-        }
 
         $docField->document_id = $input['document_id'];
         $docField->field_id = $input['field_id'];
@@ -92,7 +128,21 @@ class DocFieldController extends Controller
      */
     public function destroy(string $id)
     {
-        DocField::find($id)->delete();
+        $docField = DocField::find($id);
+
+        if (is_null($docField)) {
+            return $this->sendError('DocField not found.');
+        }
+        $document = Document::find($docField->document_id);
+        if (is_null($document)) {
+            return $this->sendError('Document does not exist');
+        }
+
+        if (!$this->CheckPermission("delete_docfield", $document->folder_id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
+
+        $docField->delete();
 
         return $this->sendResponse([], 'DocField deleted successfully.');
     }
