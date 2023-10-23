@@ -14,11 +14,7 @@ return new class extends Migration
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('folder_id');
-            $table->string('physical_path');
             $table->string('document_name');
-            $table->string('file_size');
-            $table->unsignedBigInteger('created_by');
-            $table->unsignedBigInteger('updated_by');
             $table->timestamps();
 
             $table->foreign('folder_id')->references('id')->on('folders')->onDelete('cascade');

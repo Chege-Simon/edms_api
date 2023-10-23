@@ -40,7 +40,7 @@ class WorkStepResult extends Model
         /**
      * Get the document for the workstep result.
      */
-    public function documents(): BelongsTo
+    public function document(): BelongsTo
     {
         return $this->belongsTo(Document::class);
     }

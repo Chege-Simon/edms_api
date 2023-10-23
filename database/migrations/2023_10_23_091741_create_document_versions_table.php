@@ -13,7 +13,16 @@ return new class extends Migration
     {
         Schema::create('document_versions', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('document_id');
+            $table->string('physical_path');
+            $table->string('version_name');
+            $table->string('file_size');
+            $table->unsignedBigInteger('created_by');
+            $table->unsignedBigInteger('updated_by');
+            $table->boolean('main_file');
             $table->timestamps();
+
+            $table->foreign('document_id')->references('id')->on('documents')->onDelete('cascade');
         });
     }
 

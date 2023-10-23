@@ -20,7 +20,7 @@ class Document extends Model
     * @var array
     */
     protected $fillable = [
-        'folder_id', 'physical_path', 'document_name', 'file_size', 'created_by', 'updated_by'
+        'folder_id', 'document_name'
     ];
     
     /**
@@ -52,5 +52,12 @@ class Document extends Model
     public function workstep_results(): HasMany
     {
         return $this->hasMany(WorkStepResult::class);
+    }
+    /**
+     * Get the document_versions for the document.
+     */
+    public function document_versions(): HasMany
+    {
+        return $this->hasMany(DocumentVersion::class);
     }
 }
