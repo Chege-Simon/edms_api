@@ -14,6 +14,9 @@ class UserController extends Controller
      */
     public function index()
     {
+        if (!$this->CheckPermission("view_users", 1)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
         $users = User::with('groups')->with('groups.permissions')->paginate(20);
 
         return $this->sendResponse(UserResource::collection($users)
@@ -25,6 +28,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        if (!$this->CheckPermission("add_users", 1)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
         $input = $request->all();
 
         $validator = Validator::make($input, [
@@ -46,6 +52,9 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
+        if (!$this->CheckPermission("view_user", 1)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
         $user = User::with('groups')->with('groups.permissions')->find($id);
 
         if (is_null($user)) {
@@ -61,6 +70,9 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if (!$this->CheckPermission("update_user", 1)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
         $input = $request->all();
 
         $validator = Validator::make($input, [
@@ -88,6 +100,9 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
+        if (!$this->CheckPermission("delete_users", 1)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
         User::find($id)->delete();
 
         return $this->sendResponse([], 'User deleted successfully.');

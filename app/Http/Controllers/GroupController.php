@@ -14,6 +14,9 @@ class GroupController extends Controller
      */
     public function index()
     {
+        if (!$this->CheckPermission("view_groups", 1)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
         $groups = Group::with('permissions')->with('users')->paginate(20);
 
         return $this->sendResponse(GroupResource::collection($groups)
@@ -25,6 +28,9 @@ class GroupController extends Controller
      */
     public function store(Request $request)
     {
+        if (!$this->CheckPermission("add_group", 1)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
         $input = $request->all();
 
         $validator = Validator::make($input, [
@@ -48,6 +54,9 @@ class GroupController extends Controller
      */
     public function show(string $id)
     {
+        if (!$this->CheckPermission("view_group", 1)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
         $group = Group::with('permissions')->with('users')->find($id);
 
         if (is_null($group)) {
@@ -63,6 +72,10 @@ class GroupController extends Controller
      */
     public function update(Request $request, string $id)
     {
+
+        if (!$this->CheckPermission("update_group", 1)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
         $input = $request->all();
 
         $validator = Validator::make($input, [
@@ -92,8 +105,12 @@ class GroupController extends Controller
      */
     public function destroy(string $id)
     {
-        Group::find($id)->delete();
+        $group = Group::find($id);
 
+        if (!$this->CheckPermission("delete_groups", 1)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
+        $group->delete();
         return $this->sendResponse([], 'Group deleted successfully.');
     }
 }

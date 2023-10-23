@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\PossibleActionResource;
-use App\Models\PossibleAction;
+use App\Models\Folder;
+use App\Models\WorkStep;
 use Illuminate\Http\Request;
+use App\Models\PossibleAction;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\PossibleActionResource;
 
 class PossibleActionController extends Controller
 {
@@ -13,9 +15,23 @@ class PossibleActionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(string $workstep_id)
     {
-        $possibleActions = PossibleAction::with('workstep')->paginate(20);
+        $workstep = WorkStep::find($workstep_id);
+        if (is_null($workstep)) {
+            return $this->sendError('WorkStep not found.');
+        }
+        $folder = Folder::find($workstep->folder_id);
+        if (is_null($folder)) {
+            return $this->sendError('Folder does not exist');
+        }
+
+        if (!$this->CheckPermission("view_possible_actions", $folder->id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
+        $possibleActions = PossibleAction::where('workstep_id', '=', $workstep->id)
+        ->with('workstep')
+        ->paginate(20);
 
         return $this->sendResponse(PossibleActionResource::collection($possibleActions)
             ->response()->getData(true), 'Possible Action retrieved successfully.');
@@ -32,11 +48,25 @@ class PossibleActionController extends Controller
         $validator = Validator::make($input, [
             'name' => 'required|max:255',
             'workstep_id' => 'required',
-            'next' => 'required',
+            'next_workstep_id' => 'required',
         ]);
 
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());
+        }
+
+        $workstep = WorkStep::find($input['workstep_id']);
+
+        if (is_null($workstep)) {
+            return $this->sendError('WorkStep not found.');
+        }
+        $folder = Folder::find($workstep->folder_id);
+        if (is_null($folder)) {
+            return $this->sendError('Folder does not exist');
+        }
+
+        if (!$this->CheckPermission("add_possible_action", $folder->id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
         }
 
         $possibleAction = PossibleAction::create($input);
@@ -50,13 +80,23 @@ class PossibleActionController extends Controller
      */
     public function show(string $id)
     {
-        $possibleAction = PossibleAction::with('workstep')->find($id);
+        $possible_action = PossibleAction::with('workstep')
+        ->with('workstep.folder')
+        ->find($id);
 
-        if (is_null($possibleAction)) {
+        if (is_null($possible_action)) {
             return $this->sendError('Possible Action not found.');
         }
+        $folder = Folder::find($possible_action->workstep->folder->id);
+        if (is_null($folder)) {
+            return $this->sendError('Folder does not exist');
+        }
 
-        return $this->sendResponse(PossibleActionResource::make($possibleAction)
+        if (!$this->CheckPermission("view_possible_action", $folder->id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
+
+        return $this->sendResponse(PossibleActionResource::make($possible_action)
             ->response()->getData(true), 'Possible Action retrieved successfully.');
     }
 
@@ -67,28 +107,37 @@ class PossibleActionController extends Controller
     {
         $input = $request->all();
 
+        $possible_action = PossibleAction::with('workstep')
+        ->with('workstep.folder')
+        ->find($id);
+
+        if (is_null($possible_action)) {
+            return $this->sendError('Possible Action not found.');
+        }
+        $folder = Folder::find($possible_action->workstep->folder->id);
+        if (is_null($folder)) {
+            return $this->sendError('Folder does not exist');
+        }
+
+        if (!$this->CheckPermission("update_possible_action", $folder->id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
         $validator = Validator::make($input, [
             'name' => 'required|max:255',
             'workstep_id' => 'required',
-            'next' => 'required',
+            'next_workstep_id' => 'required',
         ]);
-
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());
         }
-        $possibleAction = PossibleAction::find($id);
 
-        if (is_null($possibleAction)) {
-            return $this->sendError('Workstep not found.');
-        }
+        $possible_action->name = $input['name'];
+        $possible_action->next_workstep_id = $input['next_workstep_id'];
+        $possible_action->workstep_id = $input['workstep_id'];
 
-        $possibleAction->name = $input['name'];
-        $possibleAction->next = $input['next'];
-        $possibleAction->workstep_id = $input['workstep_id'];
+        $possible_action->save();
 
-        $possibleAction->save();
-
-        return $this->sendResponse(PossibleActionResource::make($possibleAction)
+        return $this->sendResponse(PossibleActionResource::make($possible_action)
             ->response()->getData(true), 'Possible Action updated successfully.');
     }
 
@@ -97,7 +146,21 @@ class PossibleActionController extends Controller
      */
     public function destroy(string $id)
     {
-        PossibleAction::find($id)->delete();
+        $possible_action = PossibleAction::with('workstep')->with('workstep.folder')->find($id);
+
+        if (is_null($possible_action)) {
+            return $this->sendError('Possible Action does not exist');
+        }
+        $folder = Folder::find($possible_action->workstep->folder->id);
+
+        if (is_null($folder)) {
+            return $this->sendError('Folder does not exist');
+        }
+
+        if (!$this->CheckPermission("delete_possible_actions", $folder->id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
+        $possible_action->delete();
 
         return $this->sendResponse([], 'Possible Action deleted successfully.');
     }

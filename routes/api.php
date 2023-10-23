@@ -44,6 +44,8 @@ Route::group([
     Route::get('/user-profile', [AuthController::class, 'userProfile'])->name('user-profile');
 });
 Route::group(['middleware' => ['jwt.auth']], function () {
+
+});
     
 // folder endpoints
 Route::get('folders/{parent_folder_id}', [FolderController::class, 'index'])->name('folders');
@@ -130,6 +132,5 @@ Route::get('possibleaction/{id}/delete', [PossibleActionController::class, 'dest
 Route::get('workstepresults/{workstep_id}', [WorkstepResultController::class, 'index'])->name('workstepresult');
 Route::get('workstepresult/{id}', [WorkstepResultController::class, 'show'])->name('workstepresult.show');
 Route::post('workstepresults', [WorkstepResultController::class, 'store'])->name('workstepresult.store');
-Route::post('workstepresult/{id}', [WorkstepResultController::class, 'update'])->name('workstepresult.update');
+Route::post('workstepresult/{id}', [WorkstepResultController::class, 'rollback'])->name('workstepresult.rollback');
 Route::get('workstepresult/{id}/delete', [WorkstepResultController::class, 'destroy'])->name('workstepresult.destroy');
-});

@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\FieldResource;
-use Illuminate\Http\Request;
 use App\Models\Field;
+use App\Models\Folder;
+use Illuminate\Http\Request;
+use App\Http\Resources\FieldResource;
 use Illuminate\Support\Facades\Validator;
 
 class FieldController extends Controller
@@ -12,8 +13,11 @@ class FieldController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(string $folder_id)
     {
+        if (!$this->CheckPermission("view_fields", $folder_id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
         $fields = Field::with('folder')->paginate(20);
 
         return $this->sendResponse(FieldResource::collection($fields)
@@ -34,7 +38,14 @@ class FieldController extends Controller
     public function store(Request $request)
     {
         $input = $request->all();
+        $folder = Folder::find($input['folder_id']);
+        if (is_null($folder)) {
+            return $this->sendError('Folder does not exist');
+        }
 
+        if (!$this->CheckPermission("add_field", $folder->id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
         $validator = Validator::make($input, [
             'folder_id' => 'required',
             'field_name' => 'required|max:255',
@@ -61,6 +72,14 @@ class FieldController extends Controller
         if (is_null($field)) {
             return $this->sendError('Field not found.');
         }
+        $folder = Folder::find($field->folder_id);
+        if (is_null($folder)) {
+            return $this->sendError('Folder does not exist');
+        }
+
+        if (!$this->CheckPermission("view_field", $folder->id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
 
         return $this->sendResponse(FieldResource::make($field)
         ->response()->getData(true), 'Field retrieved successfully.');
@@ -80,7 +99,21 @@ class FieldController extends Controller
     public function update(Request $request, string $id)
     {
         $input = $request->all();
+        $field = Field::find($id);
+        if (is_null($field)) {
+            return $this->sendError('Field not found.');
+        }
+        $new_folder = Folder::find($input['folder_id']);
+        $old_folder = Folder::find($field->folder_id);
+        if (is_null($new_folder) || is_null($old_folder)) {
+            return $this->sendError('Folder does not exist');
+        }
 
+        if ((!$this->CheckPermission("update_field", $new_folder->id) 
+                && $new_folder->id != $old_folder->id) 
+                    || !$this->CheckPermission("edit_documents", $old_folder->id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
         $validator = Validator::make($input, [
             'folder_id' => 'required',
             'field_name' => 'required|max:255',
@@ -91,12 +124,6 @@ class FieldController extends Controller
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
-        $field = Field::find($id);
-
-
-        if (is_null($field)) {
-            return $this->sendError('Folder not found.');
-        }
 
         $field->folder_id = $input['folder_id'];
         $field->field_name = $input['field_name'];
@@ -112,8 +139,20 @@ class FieldController extends Controller
      */
     public function destroy(string $id)
     {
-        Field::find($id)->delete();
+        $field = Field::find($id);
+        if (is_null($field)) {
+            return $this->sendError('Field not found.');
+        }
+        $folder = Folder::find($field->folder_id);
 
+        if (is_null($folder)) {
+            return $this->sendError('Folder does not exist');
+        }
+
+        if (!$this->CheckPermission("delete_fields", $folder->id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
+        $field->delete();
         return $this->sendResponse([], 'Field deleted successfully.');
     }
 }

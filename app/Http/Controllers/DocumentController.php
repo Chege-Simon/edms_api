@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\DocumentResource;
-use Illuminate\Http\Request;
+use App\Models\Folder;
 use App\Models\Document;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\DocumentResource;
+use Illuminate\Support\Facades\Validator;
 
 class DocumentController extends Controller
 {
@@ -14,9 +15,16 @@ class DocumentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(string $folder_id)
     {
-        $documents = Document::with('fields')->with('folder')->with('doc_fields')->paginate(20);
+        if (!$this->CheckPermission("view_documents", $folder_id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
+        $documents = Document::where('folder_id', '=', $folder_id)
+        ->with('fields')
+        ->with('folder')
+        ->with('doc_fields')
+        ->paginate(20);
 
         return $this->sendResponse(DocumentResource::collection($documents)
         ->response()->getData(true), 'Documents retrieved successfully.');
@@ -36,7 +44,14 @@ class DocumentController extends Controller
     public function store(Request $request)
     {
         $input = $request->all();
+        $folder = Folder::find($input['folder_id']);
+        if (is_null($folder)) {
+            return $this->sendError('Folder does not exist');
+        }
 
+        if (!$this->CheckPermission("add_document", $folder->id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
         $validator = Validator::make($input, [
             'folder_id' => 'required',
             'physical_path' => 'required|max:255',
@@ -67,6 +82,15 @@ class DocumentController extends Controller
             return $this->sendError('Document not found.');
         }
 
+        $folder = Folder::find($document->folder_id);
+        if (is_null($folder)) {
+            return $this->sendError('Folder does not exist');
+        }
+
+        if (!$this->CheckPermission("view_document", $folder->id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
+
         return $this->sendResponse(DocumentResource::make($document)
         ->response()->getData(true), 'Document retrieved successfully.');
     }
@@ -85,7 +109,22 @@ class DocumentController extends Controller
     public function update(Request $request, string $id)
     {
         $input = $request->all();
+        $document = Document::find($id);
 
+        if (is_null($document)) {
+            return $this->sendError('Document not found.');
+        }
+        $new_folder = Folder::find($input['folder_id']);
+        $old_folder = Folder::find($document->folder_id);
+        if (is_null($new_folder) || is_null($old_folder)) {
+            return $this->sendError('Folder does not exist');
+        }
+
+        if ((!$this->CheckPermission("update_document", $new_folder->id) 
+                && $new_folder->id != $old_folder->id) 
+                    || !$this->CheckPermission("edit_documents", $old_folder->id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
         $validator = Validator::make($input, [
             'folder_id' => 'required',
             'physical_path' => 'required|max:255',
@@ -98,11 +137,6 @@ class DocumentController extends Controller
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
-        $document = Document::find($id);
-
-        if (is_null($document)) {
-            return $this->sendError('Document not found.');
-        }
         $document->folder_id = $input['folder_id'];
         $document->physical_path = $input['physical_path'];
         $document->document_name = $input['document_name'];
@@ -119,7 +153,20 @@ class DocumentController extends Controller
      */
     public function destroy(string $id)
     {
-        Document::find($id)->delete();
+        $document = Document::find($id);
+        if (is_null($document)) {
+            return $this->sendError('Document not found.');
+        }
+        $folder = Folder::find($document->folder_id);
+
+        if (is_null($folder)) {
+            return $this->sendError('Folder does not exist');
+        }
+
+        if (!$this->CheckPermission("delete_documents", $folder->id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
+        $document->delete();
 
         return $this->sendResponse([], 'Document deleted successfully.');
     }

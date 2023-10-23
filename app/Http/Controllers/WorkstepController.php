@@ -14,9 +14,15 @@ class WorkstepController extends Controller
      /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(string $folder_id)
     {
-        $workstep = Workstep::with('possible_actions')->with('folder')->paginate(20);
+        if (!$this->CheckPermission("view_worksteps", $folder_id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
+        $workstep = Workstep::where('folder_id', '=', $folder_id)
+        ->with('possible_actions')
+        ->with('folder')
+        ->paginate(20);
 
         return $this->sendResponse(WorkstepResource::collection($workstep)
         ->response()->getData(true), 'Workstep retrieved successfully.');
@@ -29,7 +35,14 @@ class WorkstepController extends Controller
     public function store(Request $request)
     {
         $input = $request->all();
+        $folder = Folder::find($input['folder_id']);
+        if (is_null($folder)) {
+            return $this->sendError('Folder does not exist');
+        }
 
+        if (!$this->CheckPermission("add_workstep", $folder->id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
         $validator = Validator::make($input, [
             'workstep_type' => 'required|max:255',
             'action' => 'required',
@@ -59,6 +72,14 @@ class WorkstepController extends Controller
             return $this->sendError('Workstep not found.');
         }
 
+        $folder = Folder::find($workstep->folder_id);
+        if (is_null($folder)) {
+            return $this->sendError('Folder does not exist');
+        }
+
+        if (!$this->CheckPermission("view_workstep", $folder->id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
         return $this->sendResponse(WorkstepResource::make($workstep)
         ->response()->getData(true), 'Workstep retrieved successfully.');
     }
@@ -69,7 +90,22 @@ class WorkstepController extends Controller
     public function update(Request $request, string $id)
     {
         $input = $request->all();
+        $workstep = WorkStep::find($id);
 
+        if (is_null($workstep)) {
+            return $this->sendError('Workstep not found.');
+        }
+        $new_folder = Folder::find($input['folder_id']);
+        $old_folder = Folder::find($workstep->folder_id);
+        if (is_null($new_folder) || is_null($old_folder)) {
+            return $this->sendError('Folder does not exist');
+        }
+
+        if ((!$this->CheckPermission("update_workstep", $new_folder->id) 
+                && $new_folder->id != $old_folder->id) 
+                    || !$this->CheckPermission("edit_documents", $old_folder->id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
         $validator = Validator::make($input, [
             'type' => 'required|max:255',
             'folder_id' => 'required',
@@ -79,11 +115,6 @@ class WorkstepController extends Controller
 
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors());
-        }
-        $workstep = WorkStep::find($id);
-
-        if (is_null($workstep)) {
-            return $this->sendError('Workstep not found.');
         }
 
         $workstep->type = $input['type'];
@@ -102,7 +133,21 @@ class WorkstepController extends Controller
      */
     public function destroy(string $id)
     {
-        WorkStep::find($id)->delete();
+        $workstep = WorkStep::find($id);
+
+        if (is_null($workstep)) {
+            return $this->sendError('Workstep not found.');
+        }
+        $folder = Folder::find($workstep->folder_id);
+
+        if (is_null($folder)) {
+            return $this->sendError('Folder does not exist');
+        }
+
+        if (!$this->CheckPermission("delete_worksteps", $folder->id)) {
+            return $this->sendError($error = 'Unauthorized', $code = 403);
+        }
+        $workstep->delete();
 
         return $this->sendResponse([], 'Workstep deleted successfully.');
     }

@@ -135,7 +135,7 @@ class FolderController extends Controller
         $folder = Folder::find($id);
 
         if (is_null($folder)) {
-            return $this->sendError('Parent folder does not exist');
+            return $this->sendError('Folder does not exist');
         }
 
         if (!$this->CheckPermission("delete_folder", $folder->id)) {
