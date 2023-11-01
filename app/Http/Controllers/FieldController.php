@@ -111,7 +111,7 @@ class FieldController extends Controller
 
         if ((!$this->CheckPermission("add_field", $new_folder->id) 
                 && $new_folder->id != $old_folder->id) 
-                    || !$this->CheckPermission("update_documents", $old_folder->id)) {
+                    || !$this->CheckPermission("update_document", $old_folder->id)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         $validator = Validator::make($input, [

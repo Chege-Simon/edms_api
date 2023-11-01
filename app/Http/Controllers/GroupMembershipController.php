@@ -103,7 +103,7 @@ class GroupMembershipController extends Controller
      */
     public function destroy(string $id)
     {
-        if (!$this->CheckPermission("delete_group_memberships", 1)) {
+        if (!$this->CheckPermission("delete_group_membership", 1)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         GroupMembership::find($id)->delete();

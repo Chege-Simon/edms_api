@@ -107,7 +107,7 @@ class GroupController extends Controller
     {
         $group = Group::find($id);
 
-        if (!$this->CheckPermission("delete_groups", 1)) {
+        if (!$this->CheckPermission("delete_group", 1)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         $group->delete();

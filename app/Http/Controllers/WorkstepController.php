@@ -25,7 +25,7 @@ class WorkstepController extends Controller
         ->paginate(20);
 
         return $this->sendResponse(WorkstepResource::collection($workstep)
-        ->response()->getData(true), 'Workstep retrieved successfully.');
+        ->response()->getData(true), 'Worksteps retrieved successfully.');
     }
 
      /**
@@ -103,7 +103,7 @@ class WorkstepController extends Controller
 
         if ((!$this->CheckPermission("update_workstep", $new_folder->id) 
                 && $new_folder->id != $old_folder->id) 
-                    || !$this->CheckPermission("edit_documents", $old_folder->id)) {
+                    || !$this->CheckPermission("update_document", $old_folder->id)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         $validator = Validator::make($input, [
@@ -144,7 +144,7 @@ class WorkstepController extends Controller
             return $this->sendError('Folder does not exist');
         }
 
-        if (!$this->CheckPermission("delete_worksteps", $folder->id)) {
+        if (!$this->CheckPermission("delete_workstep", $folder->id)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         $workstep->delete();

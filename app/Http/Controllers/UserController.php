@@ -28,7 +28,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        if (!$this->CheckPermission("add_users", 1)) {
+        if (!$this->CheckPermission("add_user", 1)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         $input = $request->all();
@@ -100,7 +100,7 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        if (!$this->CheckPermission("delete_users", 1)) {
+        if (!$this->CheckPermission("delete_user", 1)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         User::find($id)->delete();

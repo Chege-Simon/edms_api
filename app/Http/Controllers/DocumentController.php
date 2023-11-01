@@ -226,7 +226,7 @@ class DocumentController extends Controller
             return $this->sendError('Folder does not exist');
         }
 
-        if (!$this->CheckPermission("delete_documents", $folder->id)) {
+        if (!$this->CheckPermission("delete_document", $folder->id)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         $document->delete();

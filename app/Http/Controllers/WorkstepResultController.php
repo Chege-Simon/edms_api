@@ -38,7 +38,7 @@ class WorkstepResultController extends Controller
         ->paginate(20);
 
         return $this->sendResponse(WorkstepResultResource::collection($workstepresults)
-            ->response()->getData(true), 'Workstep Result retrieved successfully.');
+            ->response()->getData(true), 'Workstep Results retrieved successfully.');
     }
 
     /**
@@ -176,7 +176,7 @@ class WorkstepResultController extends Controller
         ->with('workstep.folder')
         ->find($id);
         if (is_null($workstepresult)) {
-            return $this->sendError('PWorkstep Result does not exist');
+            return $this->sendError('Workstep Result does not exist');
         }
         $folder = Folder::find($workstepresult->workstep->folder->id);
 
@@ -184,7 +184,7 @@ class WorkstepResultController extends Controller
             return $this->sendError('Folder does not exist');
         }
 
-        if (!$this->CheckPermission("delete_workstep_results", $folder->id)) {
+        if (!$this->CheckPermission("delete_workstep_result", $folder->id)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         $workstepresult->delete();

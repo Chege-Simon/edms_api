@@ -34,7 +34,7 @@ class PossibleActionController extends Controller
         ->paginate(20);
 
         return $this->sendResponse(PossibleActionResource::collection($possibleActions)
-            ->response()->getData(true), 'Possible Action retrieved successfully.');
+            ->response()->getData(true), 'Possible Actions retrieved successfully.');
     }
 
     /**
@@ -157,7 +157,7 @@ class PossibleActionController extends Controller
             return $this->sendError('Folder does not exist');
         }
 
-        if (!$this->CheckPermission("delete_possible_actions", $folder->id)) {
+        if (!$this->CheckPermission("delete_possible_action", $folder->id)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         $possible_action->delete();

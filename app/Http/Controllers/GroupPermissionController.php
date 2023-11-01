@@ -20,7 +20,7 @@ class GroupPermissionController extends Controller
         $groupPermissions = GroupPermission::with('group')->with('group.users')->paginate(20);
 
         return $this->sendResponse(GroupPermissionResource::collection($groupPermissions)
-        ->response()->getData(true),'Group Memberships retrieved successfully.');
+        ->response()->getData(true),'Group Permissions retrieved successfully.');
     }
 
     /**
@@ -71,7 +71,7 @@ class GroupPermissionController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        if (!$this->CheckPermission("update_group_permissions", 1)) {
+        if (!$this->CheckPermission("update_group_permission", 1)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         $validator = Validator::make($request->all(), [
@@ -100,7 +100,7 @@ class GroupPermissionController extends Controller
      */
     public function destroy(string $id)
     {
-        if (!$this->CheckPermission("delete_group_permissions", 1)) {
+        if (!$this->CheckPermission("delete_group_permission", 1)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
         GroupPermission::find($id)->delete();
