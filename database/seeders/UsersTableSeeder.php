@@ -15,18 +15,18 @@ class UsersTableSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
-                'name' => 'pato',
-                'username' =>'pato',
-                'guid' => '207970ce-fddd-42f7-82a1-c0e6656f8247',
+                'name' => 'Admin',
+                'username' => 'Admin',
+                'guid' => '841d5bc6-5bab-453e-8f0b-b74ee43dc2da',
                 'domain' => 'default',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             
             [
-                'name' => 'Admin',
-                'username' => 'Admin',
-                'guid' => '841d5bc6-5bab-453e-8f0b-b74ee43dc2da',
+                'name' => 'pato',
+                'username' =>'pato',
+                'guid' => '207970ce-fddd-42f7-82a1-c0e6656f8247',
                 'domain' => 'default',
                 'created_at' => now(),
                 'updated_at' => now(),

@@ -14,10 +14,19 @@ class GroupsTableSeeder extends Seeder
     public function run(): void
     {
         DB::table('groups')->insert([
-            'group_name' => 'developers',
+            [
+            'group_name' => 'admin_group',
             'group_admin_id' => '1',
             'created_at' => now(),
             'updated_at' => now(),
+            ],
+
+            [
+            'group_name' => 'devs_group',
+            'group_admin_id' => '1',
+            'created_at' => now(),
+            'updated_at' => now(),
+            ],
         ]);
     }
 }

@@ -18,18 +18,18 @@ class DatabaseSeeder extends Seeder
         $this->call(UsersTableSeeder::class);
         \App\Models\User::factory([
             [
-                'name' => 'pato',
-                'username' =>'pato',
-                'guid' => '207970ce-fddd-42f7-82a1-c0e6656f8247',
+                'name' => 'Admin',
+                'username' => 'Admin',
+                'guid' => '841d5bc6-5bab-453e-8f0b-b74ee43dc2da',
                 'domain' => 'default',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            
+
             [
-                'name' => 'Admin',
-                'username' => 'Admin',
-                'guid' => '841d5bc6-5bab-453e-8f0b-b74ee43dc2da',
+                'name' => 'pato',
+                'username' =>'pato',
+                'guid' => '207970ce-fddd-42f7-82a1-c0e6656f8247',
                 'domain' => 'default',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -63,23 +63,56 @@ class DatabaseSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-        
+
 //////////////////////////// Groups ////////////////////////////////
         $this->call(GroupsTableSeeder::class);
         \App\Models\Group::factory([
-            'group_name' => 'developers',
+            [
+            'group_name' => 'admin_group',
             'group_admin_id' => '1',
             'created_at' => now(),
             'updated_at' => now(),
+            ],
+
+            [
+            'group_name' => 'devs_group',
+            'group_admin_id' => '2',
+            'created_at' => now(),
+            'updated_at' => now(),
+            ],
         ]);
 
 //////////////////// Group Memberships///////////////////////////
         $this->call(GroupMembershipsTableSeeder::class);
         \App\Models\GroupMembership::factory([
-            'group_id' => '1',
-            'user_id' => '2',
-            'created_at' => now(),
-            'updated_at' => now(),
+            [
+                'group_id' => '1',
+                'user_id' => '1',
+                'created_at' => now(),
+                'updated_at' => now(),
+                ],
+    
+                [
+                'group_id' => '2',
+                'user_id' => '2',
+                'created_at' => now(),
+                'updated_at' => now(),
+                ],
+    
+                [
+                'group_id' => '2',
+                'user_id' => '3',
+                'created_at' => now(),
+                'updated_at' => now(),
+                ],
+    
+                [
+                'group_id' => '2',
+                'user_id' => '4',
+                'created_at' => now(),
+                'updated_at' => now(),
+                ],
+    
         ]);
 
 //////////////////////// Group Permissions /////////////////////////////
