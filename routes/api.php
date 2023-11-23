@@ -47,90 +47,90 @@ Route::group([
 Route::group(['middleware' => ['jwt.auth']], function () {
     // folder endpoints
     Route::get('folders/{parent_folder_id}', [FolderController::class, 'index'])->name('folders');
-    Route::get('folder/{id}', [FolderController::class, 'show'])->name('folders.show');
-    Route::post('folders', [FolderController::class, 'store'])->name('folders.store');
-    Route::post('folder/{id}', [FolderController::class, 'update'])->name('folders.update');
-    Route::get('folder/{id}/delete', [FolderController::class, 'destroy'])->name('folders.destroy');
+    Route::get('folder/show/{id}', [FolderController::class, 'show'])->name('folders.show');
+    Route::post('folders/store', [FolderController::class, 'store'])->name('folders.store');
+    Route::post('folders/update/{id}', [FolderController::class, 'update'])->name('folders.update');
+    Route::get('folders/delete/{id}', [FolderController::class, 'destroy'])->name('folders.destroy');
 
 
     // fields endpoints
-    Route::get('fields/{folder_id}', [FieldController::class, 'index'])->name('fields');
-    Route::get('field/{id}', [FieldController::class, 'show'])->name('fields.show');
-    Route::post('fields', [FieldController::class, 'store'])->name('fields.store');
-    Route::post('field/{id}', [FieldController::class, 'update'])->name('fields.update');
-    Route::get('field/{id}/delete', [FieldController::class, 'destroy'])->name('fields.destroy');
+    Route::get('folder/fields/{folder_id}', [FieldController::class, 'index'])->name('fields');
+    Route::get('folder/field/show/{id}', [FieldController::class, 'show'])->name('fields.show');
+    Route::post('folder/fields/store', [FieldController::class, 'store'])->name('fields.store');
+    Route::post('folder/fields/update/{id}', [FieldController::class, 'update'])->name('fields.update');
+    Route::get('folder/fields/delete/{id}', [FieldController::class, 'destroy'])->name('fields.destroy');
 
 
     // documents endpoints
-    Route::get('documents/{folder_id}', [DocumentController::class, 'index'])->name('documents');
-    Route::get('document/{id}', [DocumentController::class, 'show'])->name('documents.show');
-    Route::post('documents', [DocumentController::class, 'upload'])->name('documents.upload');
-    Route::post('document/{id}', [DocumentController::class, 're_upload'])->name('documents.re_upload');
-    Route::get('document/{id}/delete', [DocumentController::class, 'destroy'])->name('documents.destroy');
-    Route::get('documentversion/{id}', [DocumentController::class, 'switch_version'])->name('documents.switch_version');
+    Route::get('folder/documents/{folder_id}', [DocumentController::class, 'index'])->name('documents');
+    Route::get('folder/document/{id}', [DocumentController::class, 'show'])->name('documents.show');
+    Route::post('folder/documents/upload', [DocumentController::class, 'upload'])->name('documents.upload');
+    Route::post('folder/documents/re-upload/{id}', [DocumentController::class, 're_upload'])->name('documents.re_upload');
+    Route::get('folder/documents/delete/{id}', [DocumentController::class, 'destroy'])->name('documents.destroy');
+    Route::get('folder/documentversion/{id}', [DocumentController::class, 'switch_version'])->name('documents.switch_version');
 
 
     // docfields endpoints
-    Route::get('docfields/{document_id}', [DocFieldController::class, 'index'])->name('docfields');
-    Route::get('docfield/{id}', [DocFieldController::class, 'show'])->name('docfields.show');
-    Route::post('docfields', [DocFieldController::class, 'store'])->name('docfields.store');
-    Route::post('docfield/{id}', [DocFieldController::class, 'update'])->name('docfields.update');
-    Route::get('docfield/{id}/delete', [DocFieldController::class, 'destroy'])->name('docfields.destroy');
+    Route::get('document/docfields/{document_id}', [DocFieldController::class, 'index'])->name('docfields');
+    Route::get('document/docfield/{id}', [DocFieldController::class, 'show'])->name('docfields.show');
+    Route::post('document/docfields/store', [DocFieldController::class, 'store'])->name('docfields.store');
+    Route::post('document/docfields/update/{id}', [DocFieldController::class, 'update'])->name('docfields.update');
+    Route::get('document/docfields/delete/{id}', [DocFieldController::class, 'destroy'])->name('docfields.destroy');
 
 
 
     // users endpoints
     Route::get('users', [UserController::class, 'index'])->name('users');
-    Route::get('user/{id}', [UserController::class, 'show'])->name('users.show');
-    Route::post('users', [UserController::class, 'store'])->name('users.store');
-    Route::post('user/{id}', [UserController::class, 'update'])->name('users.update');
-    Route::get('user/{id}/delete', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::get('user/show/{id}', [UserController::class, 'show'])->name('users.show');
+    Route::post('users/store', [UserController::class, 'store'])->name('users.store');
+    Route::post('users/update/{id}', [UserController::class, 'update'])->name('users.update');
+    Route::get('users/delete/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
 
     // groups endpoints
     Route::get('groups', [GroupController::class, 'index'])->name('groups');
-    Route::get('group/{id}', [GroupController::class, 'show'])->name('groups.show');
-    Route::post('groups', [GroupController::class, 'store'])->name('groups.store');
-    Route::post('group/{id}', [GroupController::class, 'update'])->name('groups.update');
-    Route::get('group/{id}/delete', [GroupController::class, 'destroy'])->name('groups.destroy');
+    Route::get('group/show/{id}', [GroupController::class, 'show'])->name('groups.show');
+    Route::post('groups/store', [GroupController::class, 'store'])->name('groups.store');
+    Route::post('groups/update/{id}', [GroupController::class, 'update'])->name('groups.update');
+    Route::get('groups/delete/{id}', [GroupController::class, 'destroy'])->name('groups.destroy');
 
 
     // groupmemberships endpoints
     Route::get('groupmemberships', [GroupMembershipController::class, 'index'])->name('groupmemberships');
-    Route::get('groupmembership/{id}', [GroupMembershipController::class, 'show'])->name('groupmemberships.show');
-    Route::post('groupmemberships', [GroupMembershipController::class, 'store'])->name('groupmemberships.store');
-    Route::post('groupmembership/{id}', [GroupMembershipController::class, 'update'])->name('groupmemberships.update');
-    Route::get('groupmembership/{id}/delete', [GroupMembershipController::class, 'destroy'])->name('groupmemberships.destroy');
+    Route::get('groupmembership/show/{id}', [GroupMembershipController::class, 'show'])->name('groupmemberships.show');
+    Route::post('groupmemberships/store', [GroupMembershipController::class, 'store'])->name('groupmemberships.store');
+    Route::post('groupmemberships/update/{id}', [GroupMembershipController::class, 'update'])->name('groupmemberships.update');
+    Route::get('groupmemberships/delete/{id}', [GroupMembershipController::class, 'destroy'])->name('groupmemberships.destroy');
 
 
     // grouppermissions endpoints
     Route::get('grouppermissions', [GroupPermissionController::class, 'index'])->name('grouppermissions');
-    Route::get('grouppermission/{id}', [GroupPermissionController::class, 'show'])->name('grouppermissions.show');
-    Route::post('grouppermissions', [GroupPermissionController::class, 'store'])->name('grouppermissions.store');
-    Route::post('grouppermission/{id}', [GroupPermissionController::class, 'update'])->name('grouppermissions.update');
-    Route::get('grouppermission/{id}/delete', [GroupPermissionController::class, 'destroy'])->name('grouppermissions.destroy');
+    Route::get('grouppermission/show/{id}', [GroupPermissionController::class, 'show'])->name('grouppermissions.show');
+    Route::post('grouppermissions/store', [GroupPermissionController::class, 'store'])->name('grouppermissions.store');
+    Route::post('grouppermissions/update/{id}', [GroupPermissionController::class, 'update'])->name('grouppermissions.update');
+    Route::get('grouppermissions/delete/{id}', [GroupPermissionController::class, 'destroy'])->name('grouppermissions.destroy');
 
 
     // workstep endpoints
-    Route::get('worksteps/{folder_id}', [WorkStepController::class, 'index'])->name('workstep');
-    Route::get('workstep/{id}', [WorkStepController::class, 'show'])->name('workstep.show');
-    Route::post('worksteps', [WorkStepController::class, 'store'])->name('workstep.store');
-    Route::post('workstep/{id}', [WorkStepController::class, 'update'])->name('workstep.update');
-    Route::get('workstep/{id}/delete', [WorkStepController::class, 'destroy'])->name('workstep.destroy');
+    Route::get('folder/worksteps/{folder_id}', [WorkStepController::class, 'index'])->name('workstep');
+    Route::get('folder/workstep/show/{id}', [WorkStepController::class, 'show'])->name('workstep.show');
+    Route::post('folder/worksteps/store', [WorkStepController::class, 'store'])->name('workstep.store');
+    Route::post('folder/worksteps/update/{id}', [WorkStepController::class, 'update'])->name('workstep.update');
+    Route::get('folder/worksteps/delete/{id}', [WorkStepController::class, 'destroy'])->name('workstep.destroy');
 
 
     // possible action endpoints
-    Route::get('possibleactions/{workstep_id}', [PossibleActionController::class, 'index'])->name('possibleaction');
-    Route::get('possibleaction/{id}', [PossibleActionController::class, 'show'])->name('possibleaction.show');
-    Route::post('possibleactions', [PossibleActionController::class, 'store'])->name('possibleaction.store');
-    Route::post('possibleaction/{id}', [PossibleActionController::class, 'update'])->name('possibleaction.update');
-    Route::get('possibleaction/{id}/delete', [PossibleActionController::class, 'destroy'])->name('possibleaction.destroy');
+    Route::get('workstep/possibleactions/{workstep_id}', [PossibleActionController::class, 'index'])->name('possibleaction');
+    Route::get('workstep/possibleaction/show/{id}', [PossibleActionController::class, 'show'])->name('possibleaction.show');
+    Route::post('workstep/possibleactions/store', [PossibleActionController::class, 'store'])->name('possibleaction.store');
+    Route::post('workstep/possibleactions/update/{id}', [PossibleActionController::class, 'update'])->name('possibleaction.update');
+    Route::get('workstep/possibleactions/delete/{id}', [PossibleActionController::class, 'destroy'])->name('possibleaction.destroy');
 
 
     // workstep result endpoints
-    Route::get('workstepresults/{workstep_id}', [WorkstepResultController::class, 'index'])->name('workstepresult');
-    Route::get('workstepresult/{id}', [WorkstepResultController::class, 'show'])->name('workstepresult.show');
-    Route::post('workstepresults', [WorkstepResultController::class, 'store'])->name('workstepresult.store');
-    Route::post('workstepresult/{id}', [WorkstepResultController::class, 'rollback'])->name('workstepresult.rollback');
-    Route::get('workstepresult/{id}/delete', [WorkstepResultController::class, 'destroy'])->name('workstepresult.destroy');
+    Route::get('workstep/workstepresults/{workstep_id}', [WorkstepResultController::class, 'index'])->name('workstepresult');
+    Route::get('workstep/workstepresult/show/{id}', [WorkstepResultController::class, 'show'])->name('workstepresult.show');
+    Route::post('workstep/workstepresults/store', [WorkstepResultController::class, 'store'])->name('workstepresult.store');
+    Route::post('workstep/workstepresults/update/{id}', [WorkstepResultController::class, 'rollback'])->name('workstepresult.rollback');
+    Route::get('workstep/workstepresults/delete/{id}', [WorkstepResultController::class, 'destroy'])->name('workstepresult.destroy');
 });

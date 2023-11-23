@@ -91,14 +91,14 @@ class AuthController extends Controller
      */
     protected function respondWithToken($token)
     {
-        $cookie = Cookie::make('jwt', $token, 60);
+        $cookie = Cookie::make('jwt', $token, null);
         return response()->json([
             'status' => 'success',
             'access_token' => $token,
             'authorisation' => [
             'type' => 'bearer token'
             ],
-            'expires_in' => Auth::factory()->getTTL() * 60
+            'expires_in' => 'never expires'
         ])->withCookie($cookie);
     }
 }

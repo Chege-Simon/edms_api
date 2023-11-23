@@ -107,7 +107,7 @@ class DocumentController extends Controller
         $document_version->save();
 
         return $this->sendResponse(DocumentResource::make($document)
-        ->response()->getData(true), 'Document created successfully.');
+        ->response()->getData(true), 'Document Uploaded successfully.');
     }
 
     /**
@@ -185,6 +185,7 @@ class DocumentController extends Controller
         //store the actual document and version
         $user = Auth::user();
         $updated_by = $user->id;
+        $created_by = $user->id;
         $version_name = $document->document_name.Carbon::now();
         $file = $request->file('document');
 
@@ -204,11 +205,12 @@ class DocumentController extends Controller
             'physical_path' => $destinationPath."/".$version_name,
             'file_size' => $file_size,
             'updated_by' => $updated_by,
+            'created_by' => $created_by,
             'main_file' => true
         ]);
         $document_version->save();
         return $this->sendResponse(DocumentResource::make($document)
-        ->response()->getData(true), 'Document updated successfully.');
+        ->response()->getData(true), 'Document Re-Uploaded Successfully.');
     }
 
     /**
@@ -231,7 +233,7 @@ class DocumentController extends Controller
         }
         $document->delete();
 
-        return $this->sendResponse([], 'Document deleted successfully.');
+        return $this->sendResponse([], 'Document Deleted Successfully.');
     }
 
     /**
