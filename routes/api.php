@@ -54,7 +54,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
 
     // fields endpoints
-    Route::get('folder/fields/{folder_id}', [FieldController::class, 'index'])->name('fields');
+    Route::get('folder/{folder_id}/fields', [FieldController::class, 'index'])->name('fields');
     Route::get('folder/field/show/{id}', [FieldController::class, 'show'])->name('fields.show');
     Route::post('folder/fields/store', [FieldController::class, 'store'])->name('fields.store');
     Route::post('folder/fields/update/{id}', [FieldController::class, 'update'])->name('fields.update');
@@ -62,7 +62,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
 
     // documents endpoints
-    Route::get('folder/documents/{folder_id}', [DocumentController::class, 'index'])->name('documents');
+    Route::get('folder/{folder_id}/documents', [DocumentController::class, 'index'])->name('documents');
     Route::get('folder/document/{id}', [DocumentController::class, 'show'])->name('documents.show');
     Route::post('folder/documents/upload', [DocumentController::class, 'upload'])->name('documents.upload');
     Route::post('folder/documents/re-upload/{id}', [DocumentController::class, 're_upload'])->name('documents.re_upload');
@@ -71,7 +71,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
 
     // docfields endpoints
-    Route::get('document/docfields/{document_id}', [DocFieldController::class, 'index'])->name('docfields');
+    Route::get('document/{document_id}/docfields', [DocFieldController::class, 'index'])->name('docfields');
     Route::get('document/docfield/{id}', [DocFieldController::class, 'show'])->name('docfields.show');
     Route::post('document/docfields/store', [DocFieldController::class, 'store'])->name('docfields.store');
     Route::post('document/docfields/update/{id}', [DocFieldController::class, 'update'])->name('docfields.update');
@@ -120,7 +120,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
 
     // possible action endpoints
-    Route::get('workstep/possibleactions/{workstep_id}', [PossibleActionController::class, 'index'])->name('possibleaction');
+    Route::get('workstep/{workstep_id}/possibleactions', [PossibleActionController::class, 'index'])->name('possibleaction');
     Route::get('workstep/possibleaction/show/{id}', [PossibleActionController::class, 'show'])->name('possibleaction.show');
     Route::post('workstep/possibleactions/store', [PossibleActionController::class, 'store'])->name('possibleaction.store');
     Route::post('workstep/possibleactions/update/{id}', [PossibleActionController::class, 'update'])->name('possibleaction.update');
@@ -128,7 +128,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
 
     // workstep result endpoints
-    Route::get('workstep/workstepresults/{workstep_id}', [WorkstepResultController::class, 'index'])->name('workstepresult');
+    Route::get('workstep/{workstep_id}/workstepresults', [WorkstepResultController::class, 'index'])->name('workstepresult');
     Route::get('workstep/workstepresult/show/{id}', [WorkstepResultController::class, 'show'])->name('workstepresult.show');
     Route::post('workstep/workstepresults/store', [WorkstepResultController::class, 'store'])->name('workstepresult.store');
     Route::post('workstep/workstepresults/update/{id}', [WorkstepResultController::class, 'rollback'])->name('workstepresult.rollback');
