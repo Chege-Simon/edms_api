@@ -63,7 +63,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
     // documents endpoints
     Route::get('folder/{folder_id}/documents', [DocumentController::class, 'index'])->name('documents');
-    Route::get('folder/document/{id}', [DocumentController::class, 'show'])->name('documents.show');
+    Route::get('folder/document/show/{id}', [DocumentController::class, 'show'])->name('documents.show');
     Route::post('folder/documents/upload', [DocumentController::class, 'upload'])->name('documents.upload');
     Route::post('folder/documents/re-upload/{id}', [DocumentController::class, 're_upload'])->name('documents.re_upload');
     Route::get('folder/documents/delete/{id}', [DocumentController::class, 'destroy'])->name('documents.destroy');
@@ -72,7 +72,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
     // docfields endpoints
     Route::get('document/{document_id}/docfields', [DocFieldController::class, 'index'])->name('docfields');
-    Route::get('document/docfield/{id}', [DocFieldController::class, 'show'])->name('docfields.show');
+    Route::get('document/docfield/show/{id}', [DocFieldController::class, 'show'])->name('docfields.show');
     Route::post('document/docfields/store', [DocFieldController::class, 'store'])->name('docfields.store');
     Route::post('document/docfields/update/{id}', [DocFieldController::class, 'update'])->name('docfields.update');
     Route::get('document/docfields/delete/{id}', [DocFieldController::class, 'destroy'])->name('docfields.destroy');
@@ -112,7 +112,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
 
     // workstep endpoints
-    Route::get('folder/worksteps/{folder_id}', [WorkStepController::class, 'index'])->name('workstep');
+    Route::get('folder/{folder_id}/worksteps', [WorkStepController::class, 'index'])->name('workstep');
     Route::get('folder/workstep/show/{id}', [WorkStepController::class, 'show'])->name('workstep.show');
     Route::post('folder/worksteps/store', [WorkStepController::class, 'store'])->name('workstep.store');
     Route::post('folder/worksteps/update/{id}', [WorkStepController::class, 'update'])->name('workstep.update');

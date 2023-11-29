@@ -38,6 +38,7 @@ class AuthController extends Controller
             'sAMAccountName' => $request->input('username'),  
             'password' => $request->input('password'), 
         ];
+        
 // dd($credentials);
         if (!$token = auth()->attempt($credentials)) {
             return response()->json([
@@ -95,9 +96,7 @@ class AuthController extends Controller
         return response()->json([
             'status' => 'success',
             'access_token' => $token,
-            'authorisation' => [
-            'type' => 'bearer token'
-            ],
+            'type' => 'bearer token',
             'expires_in' => 'never expires'
         ])->withCookie($cookie);
     }

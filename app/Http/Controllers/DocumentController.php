@@ -59,6 +59,7 @@ class DocumentController extends Controller
         $validator = Validator::make($input, [
             'folder_id' => 'required',
             'document_name' => 'required|max:255',
+            'document' => 'required|file'            
         ]);
 
         if ($validator->fails()) {
@@ -170,7 +171,8 @@ class DocumentController extends Controller
         }
         $validator = Validator::make($input, [
             'folder_id' => 'required',
-            'document_name' => 'required|max:255'
+            'document_name' => 'required|max:255',
+            'document' => 'required|file'            
         ]);
 
         if ($validator->fails()) {

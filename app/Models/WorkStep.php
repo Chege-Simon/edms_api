@@ -40,7 +40,7 @@ class WorkStep extends Model
         return $this->hasOne(WorkStepResult::class);
     }
 
-    public function possibleActions(): HasMany
+    public function possible_actions(): HasMany
     {
         return $this->hasMany(PossibleAction::class);
     }

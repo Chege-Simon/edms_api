@@ -45,7 +45,7 @@ class WorkstepController extends Controller
         }
         $validator = Validator::make($input, [
             'workstep_type' => 'required|max:255',
-            'action' => 'required',
+            'activity' => 'required',
             'previous' => 'required',
             'folder_id' => 'required',
 
@@ -66,7 +66,7 @@ class WorkstepController extends Controller
      */
     public function show(string $id)
     {
-        $workstep= Workstep::with('possible_actions')->with('folder')->find($id);
+        $workstep= Workstep:: with('folder')->find($id);
 
         if (is_null($workstep)) {
             return $this->sendError('Workstep not found.');
