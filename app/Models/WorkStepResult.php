@@ -32,7 +32,7 @@ class WorkStepResult extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function actions(): BelongsTo
+    public function possible_action(): BelongsTo
     {
         return $this->belongsTo(PossibleAction::class);
     }
