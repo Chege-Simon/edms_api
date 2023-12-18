@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\GroupResource;
 use App\Models\Group;
+use App\Models\GroupMembership;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -17,7 +18,7 @@ class GroupController extends Controller
         if (!$this->CheckPermission("view_groups", 1)) {
             return $this->sendError($error = 'Unauthorized', $code = 403);
         }
-        $groups = Group::with('permissions')->with('users')->paginate(20);
+        $groups = Group::with('permissions')->with('users')->with('admin')->paginate(20);
 
         return $this->sendResponse(GroupResource::collection($groups)
         ->response()->getData(true),'Groups retrieved successfully.');
@@ -43,10 +44,14 @@ class GroupController extends Controller
         }
 
         $group = Group::create($input);
- 
+
+        GroupMembership::create([
+            'group_id' => $group->id,
+            'user_id' => $group->group_admin_id
+            ]);
         return $this->sendResponse(GroupResource::make($group)
         ->response()->getData(true),'Group created successfully.');
-        
+
     }
 
     /**

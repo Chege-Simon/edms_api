@@ -42,7 +42,8 @@ class GroupPermissionController extends Controller
             return $this->sendError('Validation Error.', $validator->errors());
         }
 
-        $groupPermission = GroupPermission::create($input);
+        $newInput = array_map('intval', $input);
+        $groupPermission = GroupPermission::create($newInput);
 
         return $this->sendResponse(GroupPermissionResource::make($groupPermission)
         ->response()->getData(true),'Group Permission assigned successfully.');
@@ -88,7 +89,8 @@ class GroupPermissionController extends Controller
         if (is_null($groupPermission)) {
             return $this->sendError('Group Permission not found.');
         }
-        $groupPermission->fill($request->all());
+        $newRequest = array_map('intval', $request->request->all());
+        $groupPermission->fill($newRequest);
         $groupPermission->save();
 
         return $this->sendResponse(GroupPermissionResource::make($groupPermission)
